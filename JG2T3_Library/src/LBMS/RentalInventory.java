@@ -36,7 +36,7 @@ public class RentalInventory {
 	 * @return returns true if the rental is successfully renewed
 	 */
 	public boolean renewRental(Rental r) {
-		return true;
+		return false;
 	}
 	
 	/**
@@ -62,7 +62,7 @@ public class RentalInventory {
 	 * @return Returns true if all Rentals have been checked and fees were added when appropriate
 	 */
 	private boolean addFee() {
-		return true;
+		return false;
 		
 	}
 }
