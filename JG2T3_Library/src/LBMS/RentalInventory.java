@@ -62,7 +62,7 @@ public class RentalInventory {
 	 * @return Returns true if all Rentals have been checked and fees were added when appropriate
 	 */
 	private boolean addFee() {
-		return false;
+		return true;
 		
 	}
 }
