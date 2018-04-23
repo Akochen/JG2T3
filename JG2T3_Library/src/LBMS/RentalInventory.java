@@ -18,7 +18,7 @@ public class RentalInventory {
 	 * @return returns true if the Rentable is successfully checked in
 	 */
 	public boolean checkIn(int sku) {
-		return true;
+		return false;
 	}
 	
 	/**
