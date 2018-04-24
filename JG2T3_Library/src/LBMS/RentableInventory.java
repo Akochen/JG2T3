@@ -1,6 +1,7 @@
 package LBMS;
 import java.util.ArrayList;
 
+
 public class RentableInventory {
 	private ArrayList<Rentable> rentableList;
 	
@@ -26,6 +27,15 @@ public class RentableInventory {
 	 * @return Returns true if there are more copies of the book than there are Rentals for the book
 	 */
 	public boolean isAvailable(String isbn) {
+		Connection conn = null;
+		Statement stmt = null;
+		String sql = "COUNT(SELECT isbn " + "FROM " + Rentable + ")";
+		
+		
+		//String sql = "COUNT(SELECT sku " + "FROM " + Rentable + " WHERE sku IN(SELECT sku" + " FROM " + Rental + ")";
+		//COUNT(SELECT isbn FROM Rentable);
+		//COUNT(SELECT sku FROM Rentable WHERE sku IN(SELECT sku FROM Rental))
+		
 		return true;
 	}
 	
