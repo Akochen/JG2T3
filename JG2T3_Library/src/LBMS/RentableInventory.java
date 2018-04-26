@@ -1,14 +1,39 @@
 package LBMS;
 import java.util.ArrayList;
+import java.sql.*;
 
 
 public class RentableInventory {
 	private ArrayList<Rentable> rentableList;
-	
+	private Connection conn = null;
+	private Statement stmt = null;
+	private String URL;
+	private String uName;
+	private String uPass;
+	private int nextSku;
 	/**
 	 * Initiates an new RentableInventory
 	 */
 	public RentableInventory(){
+		try {
+			URL = "jdbc:mysql://localhost:3306/db_library?&useSSL=true";
+			uName = "root";
+			uPass = "root";
+			Class.forName("com.mysql.jdbc.Driver");
+			try {
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/?useSSL=false&autoReconnect=true", "root", "root");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
+	private int getNextSku() {
+		return 0;
 		
 	}
 	
@@ -18,6 +43,40 @@ public class RentableInventory {
 	 * @return returns true if Rentable was successfully added
 	 */
 	public boolean addRentable(Rentable r) {
+		String query = "INSERT INTO Rentable VALUES( null, " + r.getTitle() + ", "
+				+ r.getIsbn() + ", " + r.getCondition() + ", " + r.getGenre() + ", " 
+				+ r.getType() + ", " + r.getRoomNumber() + ");";
+		Statement statement= null;
+		ResultSet test = null;
+		try {
+			conn = DriverManager.getConnection(URL, uName, uPass);
+			statement = conn.createStatement();
+			test = statement.executeQuery(null);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			try {
+				test.close();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		return false;
 	}
 	
@@ -27,9 +86,7 @@ public class RentableInventory {
 	 * @return Returns true if there are more copies of the book than there are Rentals for the book
 	 */
 	public boolean isAvailable(String isbn) {
-		Connection conn = null;
-		Statement stmt = null;
-		String sql = "COUNT(SELECT isbn " + "FROM " + Rentable + ")";
+		//String sql = "COUNT(SELECT isbn " + "FROM " + Rentable + ")";
 		
 		
 		//String sql = "COUNT(SELECT sku " + "FROM " + Rentable + " WHERE sku IN(SELECT sku" + " FROM " + Rental + ")";
