@@ -28,12 +28,13 @@ public class TestMain {
 	
 	private static void addRentableUI() {
 		Scanner scanner = new Scanner(System.in);
-		RentableInventory inventory = new RentableInventory();
+		RentableInventory inventory = new RentableInventoryJDBC();
 		String title = "";
 		String isbn = "";
 		String condition = "";
 		String genre = "";
 		String roomNum = "";
+		int sku = 100;
 		
 		System.out.println("Please select the type of rentable that you wish to add.\n1) Book\n2) DVD\n3) E-Book\n4) Room"); 
 		
@@ -42,6 +43,8 @@ public class TestMain {
 		switch (type) {	
 			case 1:
 				//Asks for input information about Rentable
+				/*System.out.print("Please input the sku: ");
+				sku = scanner.nextInt();*/
 				System.out.print("Please input the title: ");
 				title = scanner.next();
 				System.out.print("Please input the ISBN: ");
@@ -52,7 +55,7 @@ public class TestMain {
 				genre = scanner.next();
 				
 				//Creates Rentable and calls the method to add it to the db
-				inventory.addRentable(new Rentable(100, title, isbn, condition, genre, "Book"));
+				inventory.addRentable(new Rentable(sku, title, isbn, condition, genre, "Book"));
 				break;
 			case 2: 
 				//Asks for input information about Rentable
