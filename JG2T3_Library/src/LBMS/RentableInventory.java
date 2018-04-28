@@ -21,7 +21,7 @@ public class RentableInventory {
 			uPass = "root";
 			Class.forName("com.mysql.jdbc.Driver");
 			try {
-				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/?useSSL=false&autoReconnect=true", "root", "root");
+				conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true&user=username&password=password");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -42,42 +42,46 @@ public class RentableInventory {
 	 * @param r the Rentable to be added to the inventory
 	 * @return returns true if Rentable was successfully added
 	 */
+	@SuppressWarnings("finally")
 	public boolean addRentable(Rentable r) {
-		String query = "INSERT INTO Rentable VALUES( null, " + r.getTitle() + ", "
-				+ r.getIsbn() + ", " + r.getCondition() + ", " + r.getGenre() + ", " 
-				+ r.getType() + ", " + r.getRoomNumber() + ");";
+		String query = r.getType();
+		
+		if(r.getType().toLowerCase().equals("room")) {
+			query = "INSERT INTO Rentable VALUES( null, " + "null" + ", "
+					+ "null" + ", " +"null" + ", " +"null" + ", " 
+					+ "null" + ", '" + r.getRoomNumber() + "');";
+		}else if(r.getType().toLowerCase().equals("dvd")) {
+			query = "INSERT INTO Rentable VALUES( null, '" + r.getTitle() + "', "
+					+ "null" + ", '" + r.getCondition() + "', '" + r.getGenre() + "', '" 
+					+ r.getType() + "', null);";
+		} else if(r.getType().toLowerCase().equals("book") || r.getType().toLowerCase().equals("ebook")) {
+			query = "INSERT INTO Rentable VALUES( null, '" + r.getTitle() + "', '"+ r.getIsbn() +"', '" 
+					+ r.getCondition() + "', '" + r.getGenre() + "', '" + r.getType() + "', null);";
+		}
 		Statement statement= null;
-		ResultSet test = null;
+		int test = 0;
 		try {
-			conn = DriverManager.getConnection(URL, uName, uPass);
+			//conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
-			test = statement.executeQuery(null);
+			test = statement.executeUpdate(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally{
 			try {
-				test.close();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			try {
 				statement.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return false;
 			}
 			try {
 				conn.close();
+				return true;
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return false;
 			}
 		}
-		
-		return false;
 	}
 	
 	/**

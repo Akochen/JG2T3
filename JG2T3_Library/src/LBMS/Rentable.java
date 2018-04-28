@@ -19,7 +19,11 @@ public class Rentable {
 	 * @param genre the genre of the Rentable
 	 */
 	public Rentable(int sku, String title, String condition, String genre){
-		
+		this.sku = sku;
+		this.title = title;
+		this.condition = condition;
+		this.genre = genre;
+		type = "DVD";
 	}
 	
 	/**
@@ -32,11 +36,23 @@ public class Rentable {
 	 * @param type whether the Rentable is an eBook, or book
 	 */
 	public Rentable(int sku, String title, String isbn, String condition, String genre, String type) {
-		
+		this.sku = sku;
+		this.title = title;
+		this.isbn = isbn;
+		this.condition = condition;
+		this.genre = genre;
+		this.type = type;
 	}
 	
-	public Rentable(String roomNumber) {
-		
+	/**
+	 * Constructor for creating a room
+	 * @param sku The sku of the Rentable
+	 * @param roomNumber The Number of the room to be added
+	 */
+	public Rentable(int sku, String roomNumber) {
+		this.sku = sku;
+		this.roomNumber = roomNumber;
+		type = "Room";
 	}
 
 	/**
