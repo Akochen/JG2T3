@@ -92,30 +92,6 @@ public class TestMain {
 				System.out.print("Invalid rentable type. Rentable not added.");
 				break;
 		}
-		if(type == 1) {
-		} else if(type == 2) {
-			//Asks for input information about Rentable
-			title = scanner.next();
-			condition = scanner.next();
-			genre = scanner.next();
-			
-			//Creates Rentable and calls the method to add it to the db
-			inventory.addRentable(new Rentable(100, title, condition, genre));
-		} else if(type == 3) {
-			//Asks for input information about Rentable
-			title = scanner.next();
-			isbn = scanner.next();
-			condition = scanner.next();
-			genre = scanner.next();
-			
-			//Creates Rentable and calls the method to add it to the db
-			inventory.addRentable(new Rentable(100, title, isbn, condition, genre, "EBook"));
-		} else if(type == 4) {
-			//Asks for input information about Rentable
-			roomNum = scanner.next();
-			//Creates Rentable and calls the method to add it to the db
-			inventory.addRentable(new Rentable(100, roomNum));
-		}
 	}
 
 }
