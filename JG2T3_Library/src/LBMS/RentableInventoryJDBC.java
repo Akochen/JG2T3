@@ -77,14 +77,17 @@ public class RentableInventoryJDBC  implements RentableInventory{
 	 * @return Returns true if there are more copies of the book than there are Rentals for the book
 	 */
 	@Override
-	public boolean isAvailable(String isbn) {
-		//String sql = "COUNT(SELECT isbn " + "FROM " + Rentable + ")";
+	public boolean isAvailable(String identifier, String type) {
+		String sql = "";
 		
+		if(type.toLowerCase().equals("dvd")){
+			sql = "";
+		}
+		else if(type.toLowerCase().equals("book")){
+			sql = "";
+		}
 		
-		//String sql = "COUNT(SELECT sku " + "FROM " + Rentable + " WHERE sku IN(SELECT sku" + " FROM " + Rental + ")";
-		//COUNT(SELECT isbn FROM Rentable);
-		//COUNT(SELECT sku FROM Rentable WHERE sku IN(SELECT sku FROM Rental))
-		
+
 		return true;
 	}
 	

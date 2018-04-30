@@ -19,7 +19,7 @@ public interface RentableInventory {
 	 * @param isbn The unique identifier of a book
 	 * @return Returns true if there are more copies of the book than there are Rentals for the book
 	 */
-	public boolean isAvailable(String isbn);
+	public boolean isAvailable(String identifier, String type);
 	
 	/**
 	 * Deletes a Rentable with a specific SKU from the database
