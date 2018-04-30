@@ -81,14 +81,36 @@ public class RentableInventoryJDBC  implements RentableInventory{
 		String sql = "";
 		
 		if(type.toLowerCase().equals("dvd")){
-			sql = "";
+			sql = "SELECT COUNT(*) FROM Rentable WHERE rentable.sku NOT IN (SELECT sku FROM Rental) AND title = " + identifier + ";";
 		}
 		else if(type.toLowerCase().equals("book")){
-			sql = "";
+			sql = "SELECT COUNT(*) FROM Rentable WHERE rentable.sku NOT IN (SELECT sku FROM Rental) AND isbn = " + identifier + ";";
 		}
 		
-
-		return true;
+		Statement statement= null;
+		int test = 0;
+		try {
+			conn = DriverManager.getConnection(URL, uName, uPass);
+			statement = conn.createStatement();
+			test = statement.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally{
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return false;
+			}
+			try {
+				conn.close();
+				return true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
 	}
 	
 	/**
