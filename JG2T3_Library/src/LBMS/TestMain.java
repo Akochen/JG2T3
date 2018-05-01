@@ -21,7 +21,11 @@ public class TestMain {
 			case 3: 
 				//TODO check-out code
 			case 4:
-				//TODO isAvailable code
+				isAvailableUI();
+			case 5:
+				searchRentableUI();
+			case 6:
+				viewRentableUI();
 				
 		}
 	}
@@ -95,6 +99,28 @@ public class TestMain {
 				System.out.print("Invalid rentable type. Rentable not added.");
 				break;
 		}
+	}
+	
+	public static void isAvailableUI(){
+		Scanner scanner = new Scanner(System.in);
+		RentableInventory inventory = new RentableInventoryJDBC();
+		
+		if(inventory.isAvailable("22", "book"))
+			System.out.println("The book is available.");
+		else
+			System.out.println("The book is not available.");
+	}
+	
+	public static void searchRentableUI(){
+		Scanner scanner = new Scanner(System.in);
+		RentableInventory inventory = new RentableInventoryJDBC();
+		inventory.searchRentables("title", "the book");
+	}
+	
+	public static void viewRentableUI(){
+		
+		RentableInventory inventory = new RentableInventoryJDBC();
+		inventory.viewRentables();
 	}
 
 }

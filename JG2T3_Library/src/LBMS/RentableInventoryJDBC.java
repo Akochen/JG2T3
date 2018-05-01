@@ -17,7 +17,7 @@ public class RentableInventoryJDBC  implements RentableInventory{
 	
 	public RentableInventoryJDBC(){
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -79,7 +79,7 @@ public class RentableInventoryJDBC  implements RentableInventory{
 	@Override
 	public boolean isAvailable(String identifier, String type) {
 		String sql = "";
-		
+		boolean result = false;
 		if(type.toLowerCase().equals("dvd")){
 			sql = "SELECT COUNT(*) FROM Rentable WHERE rentable.sku NOT IN (SELECT sku FROM Rental) AND title = " + identifier + ";";
 		}
@@ -88,11 +88,15 @@ public class RentableInventoryJDBC  implements RentableInventory{
 		}
 		
 		Statement statement= null;
-		int test = 0;
+		ResultSet test;
 		try {
 			conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
-			test = statement.executeUpdate(sql);
+			test = statement.executeQuery(sql);
+			test.first();
+			if(test.getInt(1) > 0){
+				result = true;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -101,16 +105,14 @@ public class RentableInventoryJDBC  implements RentableInventory{
 				statement.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-				return false;
 			}
 			try {
 				conn.close();
-				return true;
 			} catch (SQLException e) {
 				e.printStackTrace();
-				return false;
 			}
 		}
+		return result;
 	}
 	
 	/**
@@ -130,8 +132,60 @@ public class RentableInventoryJDBC  implements RentableInventory{
 	 * @return returns an ArrayList or Rentables that fit the search parameter
 	 */
 	@Override
-	public ArrayList<Rentable> searchRentables(String searchType, String searchParameter){
-		return rentableList;
+	public boolean searchRentables(String searchType, String searchParameter){
+		String sql = "";
+		boolean result = false;
+			sql = "SELECT * FROM Rentable WHERE rentable." + searchType + " = '" + searchParameter + "';";
+			
+			
+			Statement statement= null;
+			ResultSet resultSet;
+			try {
+				conn = DriverManager.getConnection(URL, uName, uPass);
+				statement = conn.createStatement();
+				resultSet = statement.executeQuery(sql);
+				
+				if(!resultSet.next())
+					System.out.println("No Results Found");
+				while(resultSet.next()){
+					String type = resultSet.getString(6);
+					
+					if(type.toLowerCase().equals("book") || type.toLowerCase().equals("ebook")){
+						System.out.println("SKU: " + resultSet.getString(1)
+							+ ", Title: " + resultSet.getString(2)
+							+ ", ISBN: " + resultSet.getString(3)
+							+ ", Condition: " + resultSet.getString(4)
+							+ ", Genre: " + resultSet.getString(5)
+							+ ", Type: " + resultSet.getString(6));
+					}else if(type.toLowerCase().equals("dvd")){
+						System.out.println("SKU: " + resultSet.getString(1)
+							+ ", Title: " + resultSet.getString(2)
+							+ ", Condition: " + resultSet.getString(4)
+							+ ", Genre: " + resultSet.getString(5)
+							+ ", Type: " + resultSet.getString(6));
+					}else if(type.toLowerCase().equals("room")){
+						System.out.println("SKU: " + resultSet.getString(1)
+							+ ", Room Number: " + resultSet.getString(7));
+					}
+					
+				}
+				return true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			finally{
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			return result;
 	}
 
 	/**
@@ -139,7 +193,59 @@ public class RentableInventoryJDBC  implements RentableInventory{
 	 * @return The arraylist of all Rentables in the database
 	 */
 	@Override
-	public ArrayList<Rentable> viewRentables() {
-		return rentableList;
+	public boolean viewRentables() {
+		String sql = "";
+		boolean result = false;
+			sql = "SELECT * FROM Rentable;";
+			
+			
+			Statement statement= null;
+			ResultSet resultSet;
+			try {
+				conn = DriverManager.getConnection(URL, uName, uPass);
+				statement = conn.createStatement();
+				resultSet = statement.executeQuery(sql);
+				
+				if(!resultSet.next())
+					System.out.println("No Results Found");
+				while(resultSet.next()){
+					String type = resultSet.getString(6);
+					
+					if(type.toLowerCase().equals("book") || type.toLowerCase().equals("ebook")){
+						System.out.println("SKU: " + resultSet.getString(1)
+							+ ", Title: " + resultSet.getString(2)
+							+ ", ISBN: " + resultSet.getString(3)
+							+ ", Condition: " + resultSet.getString(4)
+							+ ", Genre: " + resultSet.getString(5)
+							+ ", Type: " + resultSet.getString(6));
+					}else if(type.toLowerCase().equals("dvd")){
+						System.out.println("SKU: " + resultSet.getString(1)
+							+ ", Title: " + resultSet.getString(2)
+							+ ", Condition: " + resultSet.getString(4)
+							+ ", Genre: " + resultSet.getString(5)
+							+ ", Type: " + resultSet.getString(6));
+					}else if(type.toLowerCase().equals("room")){
+						System.out.println("SKU: " + resultSet.getString(1)
+							+ ", Room Number: " + resultSet.getString(7));
+					}
+					
+				}
+				return true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			finally{
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			return result;
 	}
 }
