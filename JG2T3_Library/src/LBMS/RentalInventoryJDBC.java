@@ -13,7 +13,7 @@ public class RentalInventoryJDBC implements IRentalInventory{
 	public boolean checkIn(int sku) {
 		// TODO Auto-generated method stub
 		return false;
-	}
+	}//test
 
 	/**
 	 * Checks a Rentable out of the library and creates a Rental for it
