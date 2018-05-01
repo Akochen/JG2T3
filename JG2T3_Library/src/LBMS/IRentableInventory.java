@@ -34,11 +34,11 @@ public interface IRentableInventory {
 	 * @param searchParameter The parameter that is being compared to the Rentables in the database to determine what will be returned
 	 * @return returns an ArrayList or Rentables that fit the search parameter
 	 */
-	public ArrayList<Rentable> searchRentables(String searchType, String searchParameter);
+	public boolean searchRentables(String searchType, String searchParameter);
 
 	/**
 	 * Displays all Rentables in the database
 	 * @return The arraylist of all Rentables in the database
 	 */
-	public ArrayList<Rentable> viewRentables();
+	public boolean viewRentables();
 }
