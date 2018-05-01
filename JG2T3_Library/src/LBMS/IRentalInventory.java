@@ -38,6 +38,6 @@ public interface IRentalInventory {
 	 * Used for displaying all existing rentals
 	 * @return Returns an ArrayList of all existing Rentals
 	 */
-	public ArrayList<Rental> viewRentals();
+	public boolean viewRentals();
 	
 }

@@ -1,24 +1,45 @@
 package LBMS;
 
 import java.util.ArrayList;
+import java.sql.*;
 
-public class RentalInventoryJDBC implements IRentalInventory{
+public class RentalInventoryJDBC implements IRentalInventory {
+	private ArrayList<Rental> rentalList;
+	private Connection conn = null;
+	private Statement stmt = null;
+	private final String URL = "jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true";
+	private final String uName = "username";
+	private final String uPass = "password";
+	private int nextSku;
+
+	public RentalInventoryJDBC() {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 
 	/**
-	 * Checks a Rentable back into the library and deletes its Rental and checks if there are any reservations for the returned Rentable
-	 * @param sku the SKU of the Rentable being checked in
+	 * Checks a Rentable back into the library and deletes its Rental and checks
+	 * if there are any reservations for the returned Rentable
+	 * 
+	 * @param sku
+	 *            the SKU of the Rentable being checked in
 	 * @return returns true if the Rentable is successfully checked in
 	 */
 	@Override
 	public boolean checkIn(int sku) {
 		// TODO Auto-generated method stub
 		return false;
-	}//test
+	}
 
 	/**
 	 * Checks a Rentable out of the library and creates a Rental for it
-	 * @param sku The SKU of the Rentable being checked out
-	 * @param userId The userId of the user checking out the Rentable
+	 * 
+	 * @param sku
+	 *            The SKU of the Rentable being checked out
 	 * @return returns true if the Rentable is successfully checked out
 	 */
 	@Override
@@ -29,7 +50,9 @@ public class RentalInventoryJDBC implements IRentalInventory{
 
 	/**
 	 * Extends the end date of a Rental
-	 * @param r The rental to renew
+	 * 
+	 * @param r
+	 *            The rental to renew
 	 * @return returns true if the rental is successfully renewed
 	 */
 	@Override
@@ -37,11 +60,15 @@ public class RentalInventoryJDBC implements IRentalInventory{
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	/**
 	 * Used for filtering Rentals based on a specific input parameter
-	 * @param searchType The attribute being used to filter results
-	 * @param searchParameters The parameter being compared to the rentals in the database to determine what will be returned
+	 * 
+	 * @param searchType
+	 *            The attribute being used to filter results
+	 * @param searchParameters
+	 *            The parameter being compared to the rentals in the database to
+	 *            determine what will be returned
 	 * @return An ArrayList containing all Rentals that pass the filter
 	 */
 	@Override
@@ -52,12 +79,41 @@ public class RentalInventoryJDBC implements IRentalInventory{
 
 	/**
 	 * Used for displaying all existing rentals
+	 * 
 	 * @return Returns an ArrayList of all existing Rentals
 	 */
 	@Override
-	public ArrayList<Rental> viewRentals() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public boolean viewRentals() {
+		String sql = "";
+		boolean result = false;
+		sql = "SELECT * FROM Rental;";
+		Statement statement = null;
+		ResultSet resultSet;
+		try {
+			conn = DriverManager.getConnection(URL, uName, uPass);
+			statement = conn.createStatement();
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				System.out.println("SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
+						+ ", End Date: " + resultSet.getString(3) + ", User Id: " + resultSet.getString(4)
+						+ ", Times Renewed: " + resultSet.getString(5));
+			}
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
 
+	}
 }

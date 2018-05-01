@@ -31,7 +31,7 @@ public class RentalInventory implements IRentalInventory {
 	}
 
 	@Override
-	public ArrayList<Rental> viewRentals() {
+	public boolean viewRentals() {
 		return inventory.viewRentals();
 	}
 

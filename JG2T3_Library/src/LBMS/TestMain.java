@@ -26,6 +26,8 @@ public class TestMain {
 				searchRentableUI();
 			case 6:
 				viewRentableUI();
+			case 7:
+				viewRentalUI();
 				
 		}
 	}
@@ -122,5 +124,12 @@ public class TestMain {
 		RentableInventory inventory = new RentableInventory();
 		inventory.viewRentables();
 	}
+	
+	public static void viewRentalUI(){
+		
+		RentalInventory inventory = new RentalInventory();
+		inventory.viewRentals();
+	}
+
 
 }
