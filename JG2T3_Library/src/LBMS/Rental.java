@@ -16,7 +16,9 @@ public class Rental {
 	 * @param end When the Rentable will need to be returned
 	 */
 	Rental(int SKU, Date start, Date end){
-		
+		this.SKU = SKU;
+		this.startDate = start;
+		this.endDate = end;
 	}
 
 	/**

@@ -106,7 +106,8 @@ public class RentableInventoryArrayList {
 	 * @return returns the removed Rentable
 	 */
 	public Rentable removeRentable(int rentableSKU) {
-		return new Rentable("r");
+		// TODO
+		return null;
 	}
 	
 	/**

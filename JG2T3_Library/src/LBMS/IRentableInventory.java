@@ -1,10 +1,9 @@
-<<<<<<< HEAD
 package LBMS;
 import java.util.ArrayList;
 import java.sql.*;
 
 
-public interface RentableInventory {
+public interface IRentableInventory {
 	
 	/**
 	 * Takes a Rentable as input and add it to the database
@@ -35,51 +34,11 @@ public interface RentableInventory {
 	 * @param searchParameter The parameter that is being compared to the Rentables in the database to determine what will be returned
 	 * @return returns an ArrayList or Rentables that fit the search parameter
 	 */
-	public boolean searchRentables(String searchType, String searchParameter);
+	public ArrayList<Rentable> searchRentables(String searchType, String searchParameter);
 
 	/**
 	 * Displays all Rentables in the database
 	 * @return The arraylist of all Rentables in the database
 	 */
-	public boolean viewRentables();
+	public ArrayList<Rentable> viewRentables();
 }
-=======
-package LBMS;
-
-import java.util.ArrayList;
-
-public class RentableInventory implements IRentableInventory {
-	
-	private RentableInventoryJDBC inventory;
-	
-	public RentableInventory() {
-		inventory = new RentableInventoryJDBC();
-	}
-
-	@Override
-	public boolean addRentable(Rentable r) {
-		return inventory.addRentable(r);
-	}
-
-	@Override
-	public boolean isAvailable(String identifier, String type) {
-		return inventory.isAvailable(identifier, type);
-	}
-
-	@Override
-	public Rentable removeRentable(int rentableSKU) {
-		return inventory.removeRentable(rentableSKU);
-	}
-
-	@Override
-	public ArrayList<Rentable> searchRentables(String searchType, String searchParameter) {
-		return inventory.searchRentables(searchType, searchParameter);
-	}
-
-	@Override
-	public ArrayList<Rentable> viewRentables() {
-		return inventory.viewRentables();
-	}
-
-}
->>>>>>> branch 'master' of https://github.com/Akochen/JG2T3.git
