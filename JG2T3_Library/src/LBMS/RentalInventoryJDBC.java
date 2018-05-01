@@ -18,10 +18,11 @@ public class RentalInventoryJDBC implements IRentalInventory{
 	/**
 	 * Checks a Rentable out of the library and creates a Rental for it
 	 * @param sku The SKU of the Rentable being checked out
+	 * @param userId The userId of the user checking out the Rentable
 	 * @return returns true if the Rentable is successfully checked out
 	 */
 	@Override
-	public boolean checkOut(int sku) {
+	public boolean checkOut(int sku, String userId) {
 		// TODO Auto-generated method stub
 		return false;
 	}

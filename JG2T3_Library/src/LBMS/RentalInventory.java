@@ -16,8 +16,8 @@ public class RentalInventory implements IRentalInventory {
 	}
 
 	@Override
-	public boolean checkOut(int sku) {
-		return inventory.checkOut(sku);
+	public boolean checkOut(int sku, String userId) {
+		return inventory.checkOut(sku, userId);
 	}
 
 	@Override

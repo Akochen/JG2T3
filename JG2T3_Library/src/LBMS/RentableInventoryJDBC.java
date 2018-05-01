@@ -120,7 +120,8 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 	 */
 	@Override
 	public Rentable removeRentable(int rentableSKU) {
-		return new Rentable("r");
+		// TODO
+		return null;
 	}
 	
 	/**
