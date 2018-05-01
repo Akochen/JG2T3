@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.sql.*;
 
 
-public class RentableInventoryJDBC  implements RentableInventory{
+public class RentableInventoryJDBC  implements IRentableInventory{
 	private ArrayList<Rentable> rentableList;
 	private Connection conn = null;
 	private Statement stmt = null;

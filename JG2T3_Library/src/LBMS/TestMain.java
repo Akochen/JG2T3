@@ -28,7 +28,7 @@ public class TestMain {
 	
 	private static void addRentableUI() {
 		Scanner scanner = new Scanner(System.in);
-		RentableInventory inventory = new RentableInventoryJDBC();
+		RentableInventory inventory = new RentableInventory();
 		String title = "";
 		String isbn = "";
 		String condition = "";

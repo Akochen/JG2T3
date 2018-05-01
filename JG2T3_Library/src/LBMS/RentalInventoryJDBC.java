@@ -2,7 +2,7 @@ package LBMS;
 
 import java.util.ArrayList;
 
-public class RentalInventoryJDBC implements RentalInventory{
+public class RentalInventoryJDBC implements IRentalInventory{
 
 	/**
 	 * Checks a Rentable back into the library and deletes its Rental and checks if there are any reservations for the returned Rentable
