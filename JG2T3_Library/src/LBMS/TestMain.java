@@ -103,7 +103,7 @@ public class TestMain {
 	
 	public static void isAvailableUI(){
 		Scanner scanner = new Scanner(System.in);
-		RentableInventory inventory = new RentableInventoryJDBC();
+		RentableInventory inventory = new RentableInventory();
 		
 		if(inventory.isAvailable("22", "book"))
 			System.out.println("The book is available.");
@@ -113,13 +113,13 @@ public class TestMain {
 	
 	public static void searchRentableUI(){
 		Scanner scanner = new Scanner(System.in);
-		RentableInventory inventory = new RentableInventoryJDBC();
+		RentableInventory inventory = new RentableInventory();
 		inventory.searchRentables("title", "the book");
 	}
 	
 	public static void viewRentableUI(){
 		
-		RentableInventory inventory = new RentableInventoryJDBC();
+		RentableInventory inventory = new RentableInventory();
 		inventory.viewRentables();
 	}
 

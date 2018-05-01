@@ -28,12 +28,12 @@ public class RentableInventory implements IRentableInventory {
 	}
 
 	@Override
-	public ArrayList<Rentable> searchRentables(String searchType, String searchParameter) {
+	public boolean searchRentables(String searchType, String searchParameter) {
 		return inventory.searchRentables(searchType, searchParameter);
 	}
 
 	@Override
-	public ArrayList<Rentable> viewRentables() {
+	public boolean viewRentables() {
 		return inventory.viewRentables();
 	}
 
