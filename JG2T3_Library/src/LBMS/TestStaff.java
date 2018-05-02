@@ -609,27 +609,45 @@ public class TestStaff {
 		Scanner scanner = new Scanner(System.in);
 		int method;
 		
-		//Print
+		//Print UI choices
 		System.out.println("Please select an operation: \n"
 				+ "1) View all rentables\n"
 				+ "2) Search Rentables\n"
-				+ "3) Add a new rentable");
-		method = scanner.nextInt();
+				+ "3) View all rentals\n"
+				+ "4) Search Rentals"
+				+ "5) Add a new rentable");
 		
+		method = scanner.nextInt();
 		switch (method) {
-			case 1:
-				addRentableUI();
-			case 2:
-				//TODO check-in code
-			case 3: 
-				//TODO check-out code
-			case 4:
-				//TODO isAvailable code
+		case 1:
+			viewRentableUI();
+			break;
+		case 2:
+			searchRentableUI();
+			break;
+		case 3:
+			viewRentalUI();
+			break;
+		case 4:
+			searchRentalUI();
+			break;
+		case 5:
+			addRentableUI();
+			break;
 		}
     }
 	
 	private static void rentalManagement() {
+		Scanner scanner = new Scanner(System.in);
+		int method;
 		
+		//Print UI choices
+		System.out.println("Please select an operation: \n"
+				+ "1) View all rentals\n");
+		switch (method) {
+		case 1:
+			viewRentalUI();
+		}
     }
 
     private static void reservationManagement() throws ClassNotFoundException, SQLException {
@@ -639,7 +657,7 @@ public class TestStaff {
     
 	private static void addRentableUI() {
 		Scanner scanner = new Scanner(System.in);
-		RentableInventory inventory = new RentableInventoryJDBC();
+		RentableInventory inventory = new RentableInventory();
 		String title = "";
 		String isbn = "";
 		String condition = "";
@@ -708,5 +726,62 @@ public class TestStaff {
 		}
 	}
 
-    
+	public static void searchRentableUI(){
+		Scanner scanner = new Scanner(System.in);
+		RentableInventory inventory = new RentableInventory();
+		
+		System.out.println("Please select an attribute to search by:\n"
+				+ "1) SKU\n"
+				+ "2) Title\n"
+				+ "3) ISBN\n"
+				+ "4) Condition\n"
+				+ "5) Genre\n"
+				+ "6) Type\n"
+				+ "7) Room Number");
+		int choice = scanner.nextInt();
+		String type = "";
+		if(choice == 1) {
+			type = "sku";
+		} else if(choice == 2) {
+			type = "title";
+		}else if(choice == 3) {
+			type = "isbn";
+		}else if(choice == 4) {
+			type = "condition";
+		}else if(choice ==5) {
+			type = "genre";
+		}else if(choice ==6) {
+			type = "type";
+		}else if(choice ==7) {
+			type = "room_number";
+		} else {
+			System.out.println("Invalid input. Please try again.");
+			searchRentableUI();
+			return;
+		}
+		String parameter = "";
+		System.out.print("Please input what you would like to search for. \nSearch: ");
+		parameter = scanner.next();
+		
+		if(!type.equals("")) {
+			System.out.println("Results:");
+			inventory.searchRentables(type, parameter);
+		}
+	}
+	
+	public static void searchRentalUI() {
+		
+	}
+	
+	public static void viewRentableUI(){
+		RentableInventory inventory = new RentableInventory();
+		System.out.println("All rentables:");
+		inventory.viewRentables();
+	}
+	
+	public static void viewRentalUI(){
+		System.out.println("All rentables:");
+		RentalInventory inventory = new RentalInventory();
+		inventory.viewRentals();
+	}
 }

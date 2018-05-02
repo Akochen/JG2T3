@@ -8,8 +8,8 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	private Connection conn = null;
 	private Statement stmt = null;
 	private final String URL = "jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true";
-	private final String uName = "username";
-	private final String uPass = "password";
+	private final String uName = "root";
+	private final String uPass = "root";
 	private int nextSku;
 
 	public RentalInventoryJDBC() {

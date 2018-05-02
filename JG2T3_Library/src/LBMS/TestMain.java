@@ -11,24 +11,34 @@ public class TestMain {
  */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		System.out.println("Please select an operation: \n"
+				+ "3) View all rentables\n"
+				+ "2) Search Rentables\n"
+				+ "1) Add a new rentable");
 		Scanner scanner = new Scanner(System.in);
 		int method = scanner.nextInt();
 		switch (method) {
 			case 1:
 				addRentableUI();
+				break;
 			case 2:
-				//TODO check-in code
-			case 3: 
-				//TODO check-out code
-			case 4:
-				isAvailableUI();
-			case 5:
 				searchRentableUI();
-			case 6:
+				break;
+			case 3:
 				viewRentableUI();
-			case 7:
+				break;
+			case 4:
 				viewRentalUI();
-				
+				break;
+			case 5:
+				//TODO check-in code
+			case 6: 
+				//TODO check-out code
+			case 7:
+				isAvailableUI();
+				break;
+			default:
+				break;
 		}
 	}
 	
@@ -49,8 +59,8 @@ public class TestMain {
 		switch (type) {	
 			case 1:
 				//Asks for input information about Rentable
-				/*System.out.print("Please input the sku: ");
-				sku = scanner.nextInt();*/
+				System.out.print("Please input the sku: ");
+				sku = scanner.nextInt();
 				System.out.print("Please input the title: ");
 				title = scanner.next();
 				System.out.print("Please input the ISBN: ");
@@ -116,7 +126,44 @@ public class TestMain {
 	public static void searchRentableUI(){
 		Scanner scanner = new Scanner(System.in);
 		RentableInventory inventory = new RentableInventory();
-		inventory.searchRentables("title", "the book");
+		
+		System.out.println("Please select an attribute to search by:\n"
+				+ "1) SKU\n"
+				+ "2) Title\n"
+				+ "3) ISBN\n"
+				+ "4) Condition\n"
+				+ "5) Genre\n"
+				+ "6) Type\n"
+				+ "7) Room Number");
+		int choice = scanner.nextInt();
+		String type = "";
+		if(choice == 1) {
+			type = "sku";
+		} else if(choice == 2) {
+			type = "title";
+		}else if(choice == 3) {
+			type = "isbn";
+		}else if(choice == 4) {
+			type = "condition";
+		}else if(choice ==5) {
+			type = "genre";
+		}else if(choice ==6) {
+			type = "type";
+		}else if(choice ==7) {
+			type = "room_number";
+		} else {
+			System.out.println("Invalid input. Please try again.");
+			searchRentableUI();
+			return;
+		}
+		String parameter = "";
+		System.out.print("Please input what you would like to search for. \nSearch: ");
+		parameter = scanner.next();
+		
+		if(!type.equals("")) {
+			System.out.println("Results:");
+			inventory.searchRentables(type, parameter);
+		}
 	}
 	
 	public static void viewRentableUI(){

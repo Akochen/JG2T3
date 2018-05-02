@@ -8,8 +8,8 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 	private Connection conn = null;
 	private Statement stmt = null;
 	private final String URL = "jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true";
-	private final String uName = "username";
-	private final String uPass = "password";
+	private final String uName = "root";
+	private final String uPass = "root";
 	private int nextSku;
 	/**
 	 * Initiates an new RentableInventory
@@ -88,19 +88,24 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 		}
 		
 		Statement statement= null;
-		ResultSet test;
+		ResultSet resultSet = null;
 		try {
 			conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
-			test = statement.executeQuery(sql);
-			test.first();
-			if(test.getInt(1) > 0){
+			resultSet = statement.executeQuery(sql);
+			resultSet.first();
+			if(resultSet.getInt(1) > 0){
 				result = true;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		finally{
+			try {
+				resultSet.close();
+			} catch (SQLException e) {
+				
+			}
 			try {
 				statement.close();
 			} catch (SQLException e) {
