@@ -30,13 +30,13 @@ public interface IRentalInventory {
 	 * Used for filtering Rentals based on a specific input parameter
 	 * @param searchType The attribute being used to filter results
 	 * @param searchParameters The parameter being compared to the rentals in the database to determine what will be returned
-	 * @return An ArrayList containing all Rentals that pass the filter
+	 * @return True if the search is successful and the desired Rentals are printed out
 	 */
-	public ArrayList<Rental> searchRentals(String searchType, String searchParameters);
+	public boolean searchRentals(String searchType, String searchParameters);
 	
 	/**
 	 * Used for displaying all existing rentals
-	 * @return Returns an ArrayList of all existing Rentals
+	 * @return True if all Rentals are successfully printed out
 	 */
 	public boolean viewRentals();
 	

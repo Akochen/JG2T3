@@ -177,6 +177,37 @@ public class TestMain {
 		RentalInventory inventory = new RentalInventory();
 		inventory.viewRentals();
 	}
+	
+	public static void searchRentalUI() {
+        Scanner scanner = new Scanner(System.in);
+        RentalInventory inventory = new RentalInventory();
+        
+        System.out.println("Please select an attribute to search by:\n"
+                + "1) SKU\n"
+                + "2) User ID\n"
+                + "3) Times Renewed");
+        int choice = scanner.nextInt();
+        String type = "";
+        if(choice == 1) {
+            type = "sku";
+        } else if(choice == 2) {
+            type = "title";
+        }else if(choice == 3) {
+            type = "isbn";
+        } else {
+            System.out.println("Invalid input. Please try again.");
+            searchRentalUI();
+            return;
+        }
+        String parameter = "";
+        System.out.print("Please input what you would like to search for. \nSearch: ");
+        parameter = scanner.next();
+        
+        if(!type.equals("")) {
+            System.out.println("Results: ");
+            inventory.searchRentals(type, parameter);
+        }
+    }
 
 
 }

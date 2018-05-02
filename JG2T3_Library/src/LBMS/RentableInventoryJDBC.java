@@ -73,7 +73,8 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 	
 	/**
 	 * Checks if a book or DVD is available
-	 * @param isbn The unique identifier of a book
+	 * @param identifier the unique attribute that determines the title or room number of the Rentable
+	 * @param type The type of Rentable being checked (DVD or Book)
 	 * @return Returns true if there are more copies of the book than there are Rentals for the book
 	 */
 	@Override
@@ -135,7 +136,7 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 	 * Searches the database for a list of Rentables
 	 * @param searchType The specific attribute being used to filter results
 	 * @param searchParameter The parameter that is being compared to the Rentables in the database to determine what will be returned
-	 * @return returns an ArrayList or Rentables that fit the search parameter
+	 * @return True if the search is successful and the desired Rentables are printed out
 	 */
 	@Override
 	public boolean searchRentables(String searchType, String searchParameter){
