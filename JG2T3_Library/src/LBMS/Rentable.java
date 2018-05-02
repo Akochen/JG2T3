@@ -64,6 +64,7 @@ public class Rentable {
 
 	/**
 	 * @param condition the condition to set
+	 * @return True if condition successfully changed
 	 */
 	public boolean setCondition(String condition) {
 		this.condition = condition;

@@ -1,4 +1,4 @@
-package person;
+package LBMS;
 import java.util.Scanner;
 import java.sql.*;
 public class TheNewUserMenu {

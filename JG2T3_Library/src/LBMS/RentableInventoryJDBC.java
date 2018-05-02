@@ -123,7 +123,7 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 	
 	/**
 	 * Deletes a Rentable with a specific SKU from the database
-	 * @param isbn The SKU of the Rentable that needs to be removed
+	 * @param rentableSKU The SKU of the Rentable that needs to be removed
 	 * @return returns the removed Rentable
 	 */
 	@Override
