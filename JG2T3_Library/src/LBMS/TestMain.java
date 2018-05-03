@@ -16,18 +16,25 @@ public class TestMain {
 		switch (method) {
 			case 1:
 				addRentableUI();
+				break;
 			case 2:
 				//TODO check-in code
+				break;
 			case 3: 
 				//TODO check-out code
+				break;
 			case 4:
 				isAvailableUI();
+				break;
 			case 5:
 				searchRentableUI();
+				break;
 			case 6:
 				viewRentableUI();
+				break;
 			case 7:
 				viewRentalUI();
+				break;
 				
 		}
 	}

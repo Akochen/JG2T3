@@ -8,8 +8,8 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 	private Connection conn = null;
 	private Statement stmt = null;
 	private final String URL = "jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true";
-	private final String uName = "username";
-	private final String uPass = "password";
+	private final String uName = "root";
+	private final String uPass = "root";
 	private int nextSku;
 	/**
 	 * Initiates an new RentableInventory
@@ -73,13 +73,20 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 	
 	/**
 	 * Checks if a book or DVD is available
-	 * @param isbn The unique identifier of a book
+	 * @param identifier the unique attribute that determines the title or room number of the Rentable
+	 * @param type The type of Rentable being checked (DVD or Book)
 	 * @return Returns true if there are more copies of the book than there are Rentals for the book
 	 */
 	@Override
 	public boolean isAvailable(String identifier, String type) {
+		String getRentable ="";
 		String sql = "";
 		boolean result = false;
+		
+		//getRentable = "SELECT from Rentable WHERE rentable.sku = " + sku + ";";
+		
+
+		
 		if(type.toLowerCase().equals("dvd")){
 			sql = "SELECT COUNT(*) FROM Rentable WHERE rentable.sku NOT IN (SELECT sku FROM Rental) AND title = " + identifier + ";";
 		}
@@ -88,19 +95,24 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 		}
 		
 		Statement statement= null;
-		ResultSet test;
+		ResultSet resultSet = null;
 		try {
 			conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
-			test = statement.executeQuery(sql);
-			test.first();
-			if(test.getInt(1) > 0){
+			resultSet = statement.executeQuery(sql);
+			resultSet.first();
+			if(resultSet.getInt(1) > 0){
 				result = true;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		finally{
+			try {
+				resultSet.close();
+			} catch (SQLException e) {
+				
+			}
 			try {
 				statement.close();
 			} catch (SQLException e) {
@@ -117,7 +129,7 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 	
 	/**
 	 * Deletes a Rentable with a specific SKU from the database
-	 * @param isbn The SKU of the Rentable that needs to be removed
+	 * @param rentableSKU The SKU of the Rentable that needs to be removed
 	 * @return returns the removed Rentable
 	 */
 	@Override
@@ -130,12 +142,20 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 	 * Searches the database for a list of Rentables
 	 * @param searchType The specific attribute being used to filter results
 	 * @param searchParameter The parameter that is being compared to the Rentables in the database to determine what will be returned
-	 * @return returns an ArrayList or Rentables that fit the search parameter
+	 * @return True if the search is successful and the desired Rentables are printed out
 	 */
 	@Override
 	public boolean searchRentables(String searchType, String searchParameter){
+		//redo, returns a string value. Do the same for viewRentables
 		String sql = "";
 		boolean result = false;
+		//if(searchType.toLowerCase().equals("sku")){
+			//int search;
+			//search = parseInt(searchParameter);
+					//sql = "SELECT * FROM Rentable WHERE rentable." + searchType + " = " + search + ";";
+
+		//}
+		//else
 			sql = "SELECT * FROM Rentable WHERE rentable." + searchType + " = '" + searchParameter + "';";
 			
 			
@@ -146,8 +166,10 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 				statement = conn.createStatement();
 				resultSet = statement.executeQuery(sql);
 				
-				if(!resultSet.next())
-					System.out.println("No Results Found");
+				if(!resultSet.next()){
+					System.out.println("No Results Found");}
+				
+				resultSet.beforeFirst();
 				while(resultSet.next()){
 					String type = resultSet.getString(6);
 					
@@ -175,6 +197,11 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 				e.printStackTrace();
 			}
 			finally{
+				try{
+					resultSet.close();
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
 				try {
 					statement.close();
 				} catch (SQLException e) {
