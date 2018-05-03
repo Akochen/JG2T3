@@ -6,7 +6,7 @@ public class TheNewUserMenu {
     static final String DRIVER = "com.mysql.jdbc.Driver";
     static final String DATABASE_URL = "jdbc:mysql://localhost/db_library?useSSL=false";
     static final String MYSQL_USERNAME ="root";
-    static final String MYSQL_PASSWORD ="batman";
+    static final String MYSQL_PASSWORD ="root";
     private static boolean isLoggedIn = false;
     
     public static void main(String[] args) throws ClassNotFoundException, SQLException {

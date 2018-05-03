@@ -509,7 +509,8 @@ public class TheNewStaffMenu {
             break;
         }
     }
-private static void addRentableUI() {
+    
+    private static void addRentableUI() {
         Scanner scanner = new Scanner(System.in);
         RentableInventory inventory = new RentableInventory();
         String title = "";
@@ -666,9 +667,9 @@ private static void addRentableUI() {
         inventory.viewRentals();
     }
 
-private static void rentalManagement() {
+    private static void rentalManagement() {
         Scanner scanner = new Scanner(System.in);
-        int method;
+        int method = 0;
         
         //Print UI choices
         System.out.println("Please select an operation: \n"
