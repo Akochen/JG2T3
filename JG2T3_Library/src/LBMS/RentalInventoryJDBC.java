@@ -1,10 +1,8 @@
 package LBMS;
 
-import java.util.ArrayList;
 import java.sql.*;
 
 public class RentalInventoryJDBC implements IRentalInventory {
-	private Connection conn = null;
 	private final String URL = "jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true";
 	private final String uName = "root";
 	private final String uPass = "root";
@@ -62,33 +60,23 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	public boolean searchRentals(String searchType, String searchParameters) {
 		boolean result = false;
 		String sql = "SELECT * FROM rental, rentable WHERE rental.sku = rentable.sku AND rentable.type = ? AND rentable.title LIKE ?;";
-		PreparedStatement statement = null;
 		ResultSet resultSet;
-		try {
-			conn = DriverManager.getConnection(URL, uName, uPass);
-			statement = conn.prepareStatement(sql);
+		try (
+			Connection conn = JDBCConfig.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+		) {
 			statement.setString(1, searchType);
 			statement.setString(2, searchParameters);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				System.out.println("SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
-						+ ", End Date: " + resultSet.getString(3) + ", User Id: " + resultSet.getString(4)
-						+ ", Times Renewed: " + resultSet.getString(5));
+				String toPrint = "SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
+				+ ", End Date: " + resultSet.getString(3) + ", User Id: " + resultSet.getString(4)
+				+ ", Times Renewed: " + resultSet.getString(5);
+				System.out.println(toPrint);
 			}
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 		return result;
 
@@ -104,6 +92,7 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		String sql = "";
 		boolean result = false;
 		sql = "SELECT * FROM Rental;";
+		Connection conn = null;
 		Statement statement = null;
 		ResultSet resultSet;
 		try {
