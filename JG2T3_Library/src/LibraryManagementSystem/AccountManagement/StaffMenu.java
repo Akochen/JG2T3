@@ -3,6 +3,8 @@ package LibraryManagementSystem.AccountManagement;
 import LibraryManagementSystem.RentableManagement.Rentable;
 import LibraryManagementSystem.RentableManagement.RentableInventory;
 import LibraryManagementSystem.RentableManagement.RentalInventory;
+import LibraryManagementSystem.RentableManagement.StaffRentableManagementInterface;
+import LibraryManagementSystem.RentableManagement.StaffRentalManagementInterface;
 import LibraryManagementSystem.ReservationManagement.StaffRMI;
 
 import java.util.Scanner;
@@ -10,10 +12,10 @@ import java.sql.*;
 
 public class StaffMenu {
 
-    static final String DRIVER = "com.mysql.jdbc.Driver";
+    static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     static final String DATABASE_URL = "jdbc:mysql://localhost/db_library?useSSL=false";
     static final String MYSQL_USERNAME ="root";
-    static final String MYSQL_PASSWORD ="g2t2";
+    static final String MYSQL_PASSWORD ="root";
     public static String staffID ="";
     private static boolean isLoggedIn = false;
     
@@ -291,7 +293,7 @@ public class StaffMenu {
         String newPassword;
        
         System.out.println("Enter New Password: ");
-        newPassword = sc.next();
+        newPassword = sc.nextLine();
         Staff tempStaff = ac.search(staffID);
        
         if(ac.changePassword(newPassword, tempStaff))
@@ -309,14 +311,14 @@ public class StaffMenu {
     private static void issueAnID() {
         System.out.println("Enter U for UserID and S for Staff ID");
         Scanner sc = new Scanner(System.in);
-        String accountTypeStr = sc.next();
+        String accountTypeStr = sc.nextLine();
         AccountCollection ac = new AccountCollection();
         Staff myAcount = ac.search(staffID);
         
         while(!accountTypeStr.equals("S")&&!accountTypeStr.equals("U"))
         {
             System.out.println("Enter U for UserID and S for Staff ID");
-            accountTypeStr = sc.next();
+            accountTypeStr = sc.nextLine();
         }
         
         char accountType = accountTypeStr.charAt(0);
@@ -452,7 +454,7 @@ public class StaffMenu {
     private static void removeByID() {
         System.out.println("Enter the I.D. to be removed");
         Scanner sc = new Scanner(System.in);
-        String idToBeRemoved = sc.next();
+        String idToBeRemoved = sc.nextLine();
         if(idToBeRemoved.equals(staffID)) {
             System.out.println("You cannot delete your account");
             return;
@@ -475,7 +477,7 @@ public class StaffMenu {
     private static void searchForAnAccount() {
         System.out.println("Enter ID of account to be searched: ");
         Scanner sc = new Scanner(System.in);
-        String searchID = sc.next();
+        String searchID = sc.nextLine();
         AccountCollection ac = new AccountCollection();
         System.out.println(ac.search(searchID));
         
@@ -489,209 +491,13 @@ public class StaffMenu {
 
     private static void rentableManagement() throws SQLException
     {
-        Scanner scanner = new Scanner(System.in);
-        int method;
-        
-        //Print UI choices
-        System.out.println("\nPlease select an operation: \n"
-                + "1) View all rentables\n"
-                + "2) Search Rentables\n"
-                + "3) Add a new rentable\n"
-                + "4) Exit Rentable Management");
-        
-        method = scanner.nextInt();
-        switch (method) {
-        case 1:
-            viewRentableUI();
-            rentableManagement();
-            break;
-        case 2:
-            searchRentableUI();
-            rentableManagement();
-            break;
-        case 3:
-            addRentableUI();
-            rentableManagement();
-            break;
-        case 4:
-            break;
-        }
+        new StaffRentableManagementInterface();
     }
     
-    private static void addRentableUI() throws SQLException
-    {
-        Scanner scanner = new Scanner(System.in);
-        RentableInventory inventory = new RentableInventory();
-        String title = "";
-        String isbn = "";
-        String condition = "";
-        String genre = "";
-        String roomNum = "";
-        int sku = 100;
         
-        System.out.println("Please select the type of rentable that you wish to add.\n1) Book\n2) DVD\n3) E-Book\n"
-        		//+ "4) Room"
-        		+ "");
-        
-        int type = scanner.nextInt();
-        
-        switch (type) {    
-            case 1:
-                //Asks for input information about Rentable
-                System.out.print("Please input the sku: ");
-                sku = scanner.nextInt();
-                System.out.print("Please input the title: ");
-                title = scanner.next();
-                System.out.print("Please input the ISBN: ");
-                isbn = scanner.next();
-                System.out.print("Please input the condition: ");
-                condition = scanner.next();
-                System.out.print("Please input the genre: ");
-                genre = scanner.next();
-                
-                //Creates Rentable and calls the method to add it to the db
-                inventory.addRentable(new Rentable(sku, title, isbn, condition, genre, "Book"));
-                break;
-            case 2:
-                //Asks for input information about Rentable
-                System.out.print("Please input the title: ");
-                title = scanner.next();
-                System.out.print("Please input the condition: ");
-                condition = scanner.next();
-                System.out.print("Please input the genre: ");
-                genre = scanner.next();
-                
-                //Creates Rentable and calls the method to add it to the db
-                inventory.addRentable(new Rentable(100, title, condition, genre));
-                break;
-            case 3:
-                //Asks for input information about Rentable
-                System.out.print("Please input the title: ");
-                title = scanner.next();
-                System.out.print("Please input the isbn: ");
-                isbn = scanner.next();
-                System.out.print("Please input the condition: ");
-                condition = scanner.next();
-                System.out.print("Please input the genre: ");
-                genre = scanner.next();
-                
-                //Creates Rentable and calls the method to add it to the db
-                inventory.addRentable(new Rentable(100, title, isbn, condition, genre, "EBook"));
-                break;
-            default:
-                System.out.print("Invalid rentable type. Rentable not added.");
-                break;
-        }
-    }
-
-    public static void searchRentableUI() throws SQLException
-    {
-        Scanner scanner = new Scanner(System.in);
-        RentableInventory inventory = new RentableInventory();
-        
-        System.out.println("Please select an attribute to search by:\n"
-                + "1) SKU\n"
-                + "2) Title\n"
-                + "3) ISBN\n"
-                + "4) Condition\n"
-                + "5) Genre\n"
-                + "6) Type\n"
-                + "");
-        int choice = scanner.nextInt();
-        String type = "";
-        if(choice == 1) {
-            type = "sku";
-        } else if(choice == 2) {
-            type = "title";
-        }else if(choice == 3) {
-            type = "isbn";
-        }else if(choice == 4) {
-            type = "condition";
-        }else if(choice ==5) {
-            type = "genre";
-        }else if(choice ==6) {
-            type = "type";
-        } else {
-            System.out.println("Invalid input. Please try again.");
-            searchRentableUI();
-            return;
-        }
-        String parameter = "";
-        System.out.print("Please input what you would like to search for. \nSearch: ");
-        parameter = scanner.next();
-        
-        if(!type.equals("")) {
-            System.out.println("Results:");
-            inventory.searchRentables(type, parameter);
-        }
-    }
     
-    public static void searchRentalUI() {
-        /*Scanner scanner = new Scanner(System.in);
-        RentalInventory inventory = new RentalInventory();
-        
-        System.out.println("Please select an attribute to search by:\n"
-                + "1) SKU\n"
-                + "2) User ID\n"
-                + "3) Times Renewed");
-        int choice = scanner.nextInt();
-        String type = "";
-        if(choice == 1) {
-            type = "sku";
-        } else if(choice == 2) {
-            type = "title";
-        }else if(choice == 3) {
-            type = "isbn";
-        } else {
-            System.out.println("Invalid input. Please try again.");
-            searchRentalUI();
-            return;
-        }
-        String parameter = "";
-        System.out.print("Please input what you would like to search for. \nSearch: ");
-        parameter = scanner.next();
-        
-        if(!type.equals("")) {
-            System.out.println("Results: ");
-            inventory.searchRentals(type, parameter);
-        }*/
-        System.out.println("If you are seeing this message Search Rentals has not been implemented");
-    }
-    
-    public static void viewRentableUI() throws SQLException
-    {
-        RentableInventory inventory = new RentableInventory();
-        System.out.println("All rentables:");
-        inventory.viewRentables();
-    }
-    
-    public static void viewRentalUI(){
-        System.out.println("All rentables:");
-        RentalInventory inventory = new RentalInventory();
-        inventory.viewRentals();
-    }
-
-    private static void rentalManagement() {
-        Scanner scanner = new Scanner(System.in);
-        int method = 0;
-        
-        //Print UI choices
-        System.out.println("Please select an operation: \n"
-                + "1) View all rentals\n"
-                + "2) Search rentals\n"
-                + "3) Exit Rental Management");
-        method = scanner.nextInt();
-        switch (method) {
-            case 1:
-                viewRentalUI();
-                rentalManagement();
-                break;
-            case 2:
-                searchRentalUI();
-                rentalManagement();
-                break;
-            case 3: break;
-        }
+    private static void rentalManagement() throws SQLException {
+        new StaffRentalManagementInterface();
     }
 
 
@@ -748,7 +554,7 @@ public class StaffMenu {
         Scanner sc = new Scanner(System.in);
         AccountCollection ac = new AccountCollection();
         System.out.println("Enter user ID");
-        String userID = sc.next();
+        String userID = sc.nextLine();
         User u = (User)ac.search(userID);
         if(u == null)
         {

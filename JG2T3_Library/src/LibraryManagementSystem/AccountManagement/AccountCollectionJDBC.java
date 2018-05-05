@@ -21,7 +21,7 @@ public class AccountCollectionJDBC
 	ArrayList<Staff> staffaccountCollection = new ArrayList();
 	static final String DATABASE_URL = "jdbc:mysql://localhost/db_library?useSSL=false";
 	static final String MYSQL_USERNAME ="root";
-	static final String MYSQL_PASSWORD ="g2t2";
+	static final String MYSQL_PASSWORD ="root";
 	Connection connection = null; // manages connection
     Statement statement = null; // query statement
     ResultSet resultSet = null; // manages results
@@ -36,7 +36,7 @@ public class AccountCollectionJDBC
 	 */
 
 	public boolean add(Staff s) throws SQLException, ClassNotFoundException {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			connection = DriverManager.getConnection( DATABASE_URL, MYSQL_USERNAME, MYSQL_PASSWORD);
 

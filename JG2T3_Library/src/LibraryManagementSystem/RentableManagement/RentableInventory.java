@@ -18,19 +18,8 @@ public class RentableInventory implements IRentableInventory {
 	 * @return returns true if Rentable was successfully added
 	 */
 	@Override
-	public boolean addRentable(Rentable r) {
+	public String addRentable(Rentable r) {
 		return inventory.addRentable(r);
-	}
-
-	/**
-	 * Checks if a book or DVD is available
-	 * @param identifier the unique attribute that determines the title or room number of the Rentable
-	 * @param type The type of Rentable being checked (DVD or Book)
-	 * @return Returns true if there are more copies of the book than there are Rentals for the book
-	 */
-	@Override
-	public boolean isAvailable(String identifier, String type) {
-		return inventory.isAvailable(identifier, type);
 	}
 
 	/**

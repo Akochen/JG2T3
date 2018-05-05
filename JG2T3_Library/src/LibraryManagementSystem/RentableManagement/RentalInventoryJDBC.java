@@ -59,7 +59,7 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	@Override
 	public boolean searchRentals(String searchType, String searchParameters) {
 		boolean result = false;
-		String sql = "SELECT * FROM rental, rentable WHERE rental.sku = rentable.sku AND rentable.type = ? AND rentable.title LIKE ?;";
+		String sql = "SELECT * FROM rental, rentable WHERE rental.rentableID = rentable.rentableID AND rentable.type = ? AND rentable.title LIKE ?;";
 		ResultSet resultSet;
 		try (
 			Connection conn = JDBCConfig.getConnection();

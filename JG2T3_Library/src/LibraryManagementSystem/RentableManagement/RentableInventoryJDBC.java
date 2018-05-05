@@ -30,95 +30,39 @@ public class RentableInventoryJDBC  implements IRentableInventory{
 	 * @return returns true if Rentable was successfully added
 	 */
 	@Override
-	public boolean addRentable(Rentable r) {
+	public String addRentable(Rentable r) {
 		String query = r.getType();
+		String endMsg = "Rentable successfully added!";
 		
-		if(r.getType().toLowerCase().equals("room")) {
-			query = "INSERT INTO Rentable VALUES( null, " + "null" + ", "
-					+ "null" + ", " +"null" + ", " +"null" + ", " 
-					+ "null" + ", '" + r.getRoomNumber() + "');";
-		}else if(r.getType().toLowerCase().equals("dvd")) {
-			query = "INSERT INTO Rentable VALUES( null, '" + r.getTitle() + "', "
+		if(r.getType().toLowerCase().equals("dvd")) {
+			query = "INSERT INTO Rentable VALUES('"+ r.getSku() + "', '" + r.getUpc() + "', '" + r.getTitle() + "', "
 					+ "null" + ", '" + r.getCondition() + "', '" + r.getGenre() + "', '" 
-					+ r.getType() + "', null);";
+					+ r.getType() + "', 1);";
 		} else if(r.getType().toLowerCase().equals("book") || r.getType().toLowerCase().equals("ebook")) {
-			query = "INSERT INTO Rentable VALUES( null, '" + r.getTitle() + "', '"+ r.getIsbn() +"', '" 
-					+ r.getCondition() + "', '" + r.getGenre() + "', '" + r.getType() + "', null);";
+			query = "INSERT INTO Rentable VALUES('" + r.getSku() + "', '" + r.getUpc() + "', '" + r.getTitle() + "', '"+ r.getIsbn() +"', '" 
+					+ r.getCondition() + "', '" + r.getGenre() + "', '" + r.getType() + "', 1);";
 		}
 		Statement statement= null;
-		int test = 0;
 		try {
 			conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
-			test = statement.executeUpdate(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
+			statement.execute(query);
+		} catch (SQLException e1) {
+			endMsg = "Error: SKU already exists.";
 		}
 		finally{
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
-				return false;
-			}
-			try {
-				conn.close();
-				return true;
-			} catch (SQLException e) {
-				e.printStackTrace();
-				return false;
-			}
-		}
-	}
-	
-	/**
-	 * Checks if a book or DVD is available
-	 * @param identifier the unique attribute that determines the title or room number of the Rentable
-	 * @param type The type of Rentable being checked (DVD or Book)
-	 * @return Returns true if there are more copies of the book than there are Rentals for the book
-	 */
-	@Override
-	public boolean isAvailable(String identifier, String type) {
-		String sql = "";
-		boolean result = false;
-		if(type.toLowerCase().equals("dvd")){
-			sql = "SELECT COUNT(*) FROM Rentable WHERE rentable.sku NOT IN (SELECT sku FROM Rental) AND title = " + identifier + ";";
-		}
-		else if(type.toLowerCase().equals("book")){
-			sql = "SELECT COUNT(*) FROM Rentable WHERE rentable.sku NOT IN (SELECT sku FROM Rental) AND isbn = " + identifier + ";";
-		}
-		
-		Statement statement= null;
-		ResultSet resultSet = null;
-		try {
-			conn = DriverManager.getConnection(URL, uName, uPass);
-			statement = conn.createStatement();
-			resultSet = statement.executeQuery(sql);
-			resultSet.first();
-			if(resultSet.getInt(1) > 0){
-				result = true;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		finally{
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				
-			}
-			try {
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+				endMsg = "Error: Unable to close statement.";
 			}
 			try {
 				conn.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				endMsg = "Error: Unable to close connection.";
 			}
 		}
-		return result;
+		return endMsg;
 	}
 	
 	/**

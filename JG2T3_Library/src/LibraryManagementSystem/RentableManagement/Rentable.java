@@ -2,13 +2,13 @@ package LibraryManagementSystem.RentableManagement;
 
 public class Rentable {
 	
-	private int sku;
+	private String sku;
 	private String title;
 	private String isbn;
 	private String condition;
 	private String genre;
 	private String type;
-	private String roomNumber;
+	private String upc;
 	
 	
 	/**
@@ -18,8 +18,9 @@ public class Rentable {
 	 * @param condition the condition/damage of the Rentable
 	 * @param genre the genre of the Rentable
 	 */
-	public Rentable(int sku, String title, String condition, String genre){
+	public Rentable(String sku, String upc, String title, String condition, String genre){
 		this.sku = sku;
+		this.upc = upc;
 		this.title = title;
 		this.condition = condition;
 		this.genre = genre;
@@ -35,24 +36,14 @@ public class Rentable {
 	 * @param genre the genre of the Rentable
 	 * @param type whether the Rentable is an eBook, or book
 	 */
-	public Rentable(int sku, String title, String isbn, String condition, String genre, String type) {
+	public Rentable(String sku, String upc, String title, String isbn, String condition, String genre, String type) {
 		this.sku = sku;
+		this.upc = upc;
 		this.title = title;
 		this.isbn = isbn;
 		this.condition = condition;
 		this.genre = genre;
 		this.type = type;
-	}
-	
-	/**
-	 * Constructor for creating a room
-	 * @param sku The sku of the Rentable
-	 * @param roomNumber The Number of the room to be added
-	 */
-	public Rentable(int sku, String roomNumber) {
-		this.sku = sku;
-		this.roomNumber = roomNumber;
-		type = "Room";
 	}
 
 	/**
@@ -74,8 +65,15 @@ public class Rentable {
 	/**
 	 * @return the sku
 	 */
-	public int getSku() {
+	public String getSku() {
 		return sku;
+	}
+	
+	/**
+	 * @return the upc
+	 */
+	public String getUpc() {
+		return upc;
 	}
 
 	/**
@@ -105,13 +103,8 @@ public class Rentable {
 	public String getType() {
 		return type;
 	}
-
-	/**
-	 * @return the roomNumber
-	 */
-	public String getRoomNumber() {
-		return roomNumber;
-	}
+	
+	
 	
 	
 }

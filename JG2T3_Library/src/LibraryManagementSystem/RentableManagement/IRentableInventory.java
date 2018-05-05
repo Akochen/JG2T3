@@ -10,16 +10,7 @@ public interface IRentableInventory {
 	 * @param r the Rentable to be added to the inventory
 	 * @return returns true if Rentable was successfully added
 	 */
-	public boolean addRentable(Rentable r);
-		
-	
-	/**
-	 * Checks if a book or DVD is available
-	 * @param identifier the unique attribute that determines the title or room number of the Rentable
-	 * @param type The type of Rentable being checked (DVD or Book)
-	 * @return Returns true if there are more copies of the book than there are Rentals for the book
-	 */
-	public boolean isAvailable(String identifier, String type);
+	public String addRentable(Rentable r);
 	
 	/**
 	 * Deletes a Rentable with a specific SKU from the database
