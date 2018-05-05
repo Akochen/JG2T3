@@ -1,4 +1,4 @@
-package LBMS;
+package LibraryManagementSystem.ReservationManagement;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -15,9 +15,9 @@ public class Reservation
      */
     private String reservationId;
     /**
-     * Rentable id associated with reservation.
+     * upc associated with reservation.
      */
-    private String rentableId;
+    private String upc;
     /**
      * User id associated with reservation.
      */
@@ -26,6 +26,10 @@ public class Reservation
      * Time that the reservation starts.
      */
     private Timestamp reservationDate;
+    /**
+     * Room number, if room reservation.
+     */
+    private String roomNumber;
     /**
      * Time that the reservation will expire.
      */
@@ -38,40 +42,43 @@ public class Reservation
      * The type of reservation; either "ITEM" or "ROOM".
      */
     private String reservationType;
-    
+
     /**
      * Reservation overloaded constructor.
      * Instantiates a reservation with a unique ID and attributes.
      *
-     * @param newRentableId      Rentable id associated with reservation.
+     * @param newUpc             upc id associated with reservation.
      * @param newUserId          User id associated with reservation.
      * @param newReservationType Type of reservation: item or room.
      */
-    Reservation(String newRentableId, String newUserId, String newReservationType)
+    Reservation(String newUpc, String newUserId, String newReservationType)
     {
         //generate random reservation id
         Random random = new Random();
         int intReservationId = random.nextInt(8999999) + 1000000;
         reservationId = Integer.toString(intReservationId);
-        
-        rentableId = newRentableId; //from Rentable class (Team 3)
+
+        upc = newUpc; //from Rentable class (Team 3)
         userId = newUserId; //from UserAccount class (Team 1)
+        roomNumber = newUpc;
         reservationDate = Timestamp.from(Instant.now());//date of reservation is current time
         isActive = true;
         reservationType = newReservationType;
-        
+
         switch (newReservationType)
         {
             case "ITEM":
                 reservationExpireDate = Timestamp.from(Instant.now().plus(336, ChronoUnit.HOURS));
+                roomNumber = "NO-ROOM";
                 break;
-            
+
             case "ROOM":
                 reservationExpireDate = Timestamp.from(Instant.now().plus(12, ChronoUnit.HOURS));
+                upc = "NO-ITEM";
                 break;
         }
     }
-    
+
     /**
      * Lists all the attributes of a reservation in string format.
      *
@@ -82,15 +89,16 @@ public class Reservation
     {
         return '{' +
                 "reservationId=" + reservationId +
-                ", rentableId=" + rentableId +
+                ", upc=" + upc +
                 ", userId=" + userId +
+                ", roomNumber=" + roomNumber +
                 ", reservationDate=" + reservationDate +
                 ", reservationExpireDate=" + reservationExpireDate +
                 ", isActive=" + isActive +
                 ", reservationType=" + reservationType +
                 '}';
     }
-    
+
     /**
      * Gets the reservation ID.
      *
@@ -100,17 +108,17 @@ public class Reservation
     {
         return reservationId;
     }
-    
+
     /**
      * Gets the rentable ID.
      *
      * @return Rentable ID.
      */
-    public String getRentableId()
+    public String getUpc()
     {
-        return rentableId;
+        return upc;
     }
-    
+
     /**
      * Gets the user ID.
      *
@@ -120,7 +128,17 @@ public class Reservation
     {
         return userId;
     }
-    
+
+    /**
+     * Gets the room number.
+     *
+     * @return Room number
+     */
+    public String getRoomNumber()
+    {
+        return roomNumber;
+    }
+
     /**
      * Gets the reservation date.
      *
@@ -130,7 +148,7 @@ public class Reservation
     {
         return reservationDate;
     }
-    
+
     /**
      * Gets the reservation expiration date.
      *
@@ -140,7 +158,7 @@ public class Reservation
     {
         return reservationExpireDate;
     }
-    
+
     /**
      * Gets the active status.
      *
@@ -150,7 +168,7 @@ public class Reservation
     {
         return isActive;
     }
-    
+
     /**
      * Gets the reservation type.
      *

@@ -1,6 +1,7 @@
-package LBMS;
+
+package LibraryManagementSystem.AccountManagement;
 /**
- * This class User’s personal data including User’s name, User’s account name,
+ * This class User's personal data including User's name, User's account name,
  * password, address. Phone, account ID 
  * 
  * 

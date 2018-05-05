@@ -1,13 +1,19 @@
-package LBMS;
+
+package LibraryManagementSystem.AccountManagement;
+import LibraryManagementSystem.RentableManagement.Rentable;
+import LibraryManagementSystem.RentableManagement.RentableInventory;
+import LibraryManagementSystem.RentableManagement.RentalInventory;
+import LibraryManagementSystem.ReservationManagement.StaffRMI;
+
 import java.util.Scanner;
 import java.sql.*;
 
-public class TheNewStaffMenu {
+public class StaffMenu {
 
     static final String DRIVER = "com.mysql.jdbc.Driver";
     static final String DATABASE_URL = "jdbc:mysql://localhost/db_library?useSSL=false";
     static final String MYSQL_USERNAME ="root";
-    static final String MYSQL_PASSWORD ="batman";
+    static final String MYSQL_PASSWORD ="g2t2";
     public static String staffID ="";
     private static boolean isLoggedIn = false;
     
@@ -29,7 +35,7 @@ public class TheNewStaffMenu {
         
         while(run)
         {
-            switch(userChoice) 
+            switch(userChoice)
             {
             case 1: login();
                     break;//login option
@@ -51,7 +57,7 @@ public class TheNewStaffMenu {
         
     }
 
-    private static void createStaff() throws SQLException {
+    private static void createStaff() throws SQLException, ClassNotFoundException {
         Connection myConn = DriverManager.getConnection(DATABASE_URL, MYSQL_USERNAME, MYSQL_PASSWORD);
         Statement myState = myConn.createStatement();
          ResultSet rstSet = null;
@@ -77,14 +83,14 @@ public class TheNewStaffMenu {
             StaffID = sc.nextLine();
         }
         String sqlID = "SELECT * FROM staffaccount WHERE staffid = '"+StaffID+"'";
-        rstSet = myState.executeQuery(sqlID); 
-        while(rstSet.next()) 
+        rstSet = myState.executeQuery(sqlID);
+        while(rstSet.next())
         {
             System.out.println("Staffid is already taken");
             System.out.println("Enter staffid: ");
             StaffID = sc.nextLine();
             sqlID = "SELECT * FROM staffaccount WHERE staffid = '"+StaffID+"'";
-            rstSet = myState.executeQuery(sqlID); 
+            rstSet = myState.executeQuery(sqlID);
         }
         rstSet.close();
         System.out.println("Enter First Name: ");
@@ -94,14 +100,14 @@ public class TheNewStaffMenu {
         System.out.println("Enter Username: ");
         Username = sc.nextLine();
         String sqlUsername = "SELECT * FROM staffaccount WHERE username = '"+Username+"'";
-        rstSet = myState.executeQuery(sqlUsername); 
-        while(rstSet.next()) 
+        rstSet = myState.executeQuery(sqlUsername);
+        while(rstSet.next())
         {
             System.out.println("Username is already taken");
             System.out.println("Enter Username: ");
             Username = sc.nextLine();
             sqlUsername = "SELECT * FROM useraccount WHERE username = '"+Username+"'";
-            rstSet = myState.executeQuery(sqlUsername); 
+            rstSet = myState.executeQuery(sqlUsername);
         }
         rstSet.close();
         System.out.println("Enter Password: ");
@@ -132,11 +138,11 @@ public class TheNewStaffMenu {
         Connection myConn = DriverManager.getConnection(DATABASE_URL, MYSQL_USERNAME, MYSQL_PASSWORD);
          ResultSet rs = null;
          PreparedStatement prepStatement = null;
-         
+        
          String staffName = new String();
          String staffPass = new String();
          isLoggedIn = false;
-         
+        
          while (!isLoggedIn)
             {
                 //Prompt user for input
@@ -145,17 +151,17 @@ public class TheNewStaffMenu {
                 staffName = sc.nextLine();
                 System.out.println("Enter Password: ");
                 staffPass = sc.nextLine();
-                
-                
+               
+               
                 //Use for prepared statement
                 String sql = "select staffID from staffaccount where username = ? and password = ?";
-                
+               
                 //Fill in preparedstatement with value of username and user password
                 prepStatement = myConn.prepareStatement(sql);
                 prepStatement.setString(1, staffName);
                 prepStatement.setString(2, staffPass);
                 rs = prepStatement.executeQuery();
-                
+               
                 //If RS has been intialized, then we are logged in
                 if(rs.next())
                 {
@@ -184,19 +190,22 @@ public class TheNewStaffMenu {
                     + "1) Account Management\n"
                     + "2) Reservation Management\n"
                     + "3) Rentables Management\n"
-                    + "4) Logout\n");
+                    + "4) Rental Management\n"
+                    + "5) Logout\n");
             Scanner sc = new Scanner(System.in);
             int amChoice = sc.nextInt();
             
-            switch(amChoice) 
+            switch(amChoice)
             {
                 case 1: accountManagement();
                         break;
-                case 2: reservationManagement(); 
+                case 2: reservationManagement();
                         break;
                 case 3: rentableManagement();
                         break;
-                case 4: logout();
+                case 4: rentalManagement();
+                        break;
+                case 5: logout();
                         break;
             }
             
@@ -316,18 +325,18 @@ public class TheNewStaffMenu {
         
     }
 
-    private static void createUserAccount() throws SQLException {
+    private static void createUserAccount() throws SQLException, ClassNotFoundException {
         Connection myConn = DriverManager.getConnection(DATABASE_URL, MYSQL_USERNAME, MYSQL_PASSWORD);
         Statement myState = myConn.createStatement();
          ResultSet rstSet = null;
          
         String UserID = new String(),
-                FirstName = new String(), 
+                FirstName = new String(),
                 LastName = new String(),
                 Email = new String(),
                 Username = new String(),
-                Password = new String(), 
-                StreetNum = new String(), 
+                Password = new String(),
+                StreetNum = new String(),
                 StreetName = new String(),
                    City = new String(),
                    State = new String(),
@@ -345,14 +354,14 @@ public class TheNewStaffMenu {
         System.out.println("Enter Username: ");
         Username = sc.nextLine();
         String sqlUsername = "SELECT * FROM useraccount WHERE username = '"+Username+"'";
-        rstSet = myState.executeQuery(sqlUsername); 
-        while(rstSet.next()) 
+        rstSet = myState.executeQuery(sqlUsername);
+        while(rstSet.next())
         {
             System.out.println("Username is already taken");
             System.out.println("Enter Username: ");
             Username = sc.nextLine();
             sqlUsername = "SELECT * FROM useraccount WHERE username = '"+Username+"'";
-            rstSet = myState.executeQuery(sqlUsername); 
+            rstSet = myState.executeQuery(sqlUsername);
         }
         rstSet.close();
            System.out.println("Enter Password: ");
@@ -369,7 +378,7 @@ public class TheNewStaffMenu {
            State = sc.nextLine();
            System.out.println("Enter Zip: ");
            Zip = sc.nextLine();
-           
+          
            User temp = new User (UserID,FirstName,LastName,Email,Username,Password, new Address(StreetNum, StreetName,
                    City,State,Zip), 0.0);     
            ac.add(temp);
@@ -379,12 +388,12 @@ public class TheNewStaffMenu {
 
     private static void editUserAccount() {
         String UserID = new String(),
-                 FirstName = new String(), 
+                 FirstName = new String(),
                  LastName = new String(),
                  Email = new String(),
                  Username = new String(),
-                 Password = new String(), 
-                 StreetNum = new String(), 
+                 Password = new String(),
+                 StreetNum = new String(),
                  StreetName = new String(),
                 City = new String(),
                 State = new String(),
@@ -478,39 +487,39 @@ public class TheNewStaffMenu {
         
     }
 
-    private static void rentableManagement() {
+    private static void rentableManagement() throws SQLException
+    {
         Scanner scanner = new Scanner(System.in);
         int method;
         
         //Print UI choices
-        System.out.println("Please select an operation: \n"
+        System.out.println("\nPlease select an operation: \n"
                 + "1) View all rentables\n"
                 + "2) Search Rentables\n"
-                + "3) View all rentals\n"
-                + "4) Search Rentals"
-                + "5) Add a new rentable");
+                + "3) Add a new rentable\n"
+                + "4) Exit Rentable Management");
         
         method = scanner.nextInt();
         switch (method) {
         case 1:
             viewRentableUI();
+            rentableManagement();
             break;
         case 2:
             searchRentableUI();
+            rentableManagement();
             break;
         case 3:
-            viewRentalUI();
+            addRentableUI();
+            rentableManagement();
             break;
         case 4:
-            searchRentalUI();
-            break;
-        case 5:
-            addRentableUI();
             break;
         }
     }
     
-    private static void addRentableUI() {
+    private static void addRentableUI() throws SQLException
+    {
         Scanner scanner = new Scanner(System.in);
         RentableInventory inventory = new RentableInventory();
         String title = "";
@@ -520,15 +529,17 @@ public class TheNewStaffMenu {
         String roomNum = "";
         int sku = 100;
         
-        System.out.println("Please select the type of rentable that you wish to add.\n1) Book\n2) DVD\n3) E-Book\n4) Room");
+        System.out.println("Please select the type of rentable that you wish to add.\n1) Book\n2) DVD\n3) E-Book\n"
+        		//+ "4) Room"
+        		+ "");
         
         int type = scanner.nextInt();
         
         switch (type) {    
             case 1:
                 //Asks for input information about Rentable
-                /*System.out.print("Please input the sku: ");
-                sku = scanner.nextInt();*/
+                System.out.print("Please input the sku: ");
+                sku = scanner.nextInt();
                 System.out.print("Please input the title: ");
                 title = scanner.next();
                 System.out.print("Please input the ISBN: ");
@@ -567,21 +578,14 @@ public class TheNewStaffMenu {
                 //Creates Rentable and calls the method to add it to the db
                 inventory.addRentable(new Rentable(100, title, isbn, condition, genre, "EBook"));
                 break;
-            case 4:
-                //Asks for input information about Rentable
-                System.out.print("Please input the room number: ");
-                roomNum = scanner.next();
-                
-                //Creates Rentable and calls the method to add it to the db
-                inventory.addRentable(new Rentable(100, roomNum));
-                break;
             default:
                 System.out.print("Invalid rentable type. Rentable not added.");
                 break;
         }
     }
 
-    public static void searchRentableUI(){
+    public static void searchRentableUI() throws SQLException
+    {
         Scanner scanner = new Scanner(System.in);
         RentableInventory inventory = new RentableInventory();
         
@@ -592,7 +596,7 @@ public class TheNewStaffMenu {
                 + "4) Condition\n"
                 + "5) Genre\n"
                 + "6) Type\n"
-                + "7) Room Number");
+                + "");
         int choice = scanner.nextInt();
         String type = "";
         if(choice == 1) {
@@ -607,8 +611,6 @@ public class TheNewStaffMenu {
             type = "genre";
         }else if(choice ==6) {
             type = "type";
-        }else if(choice ==7) {
-            type = "room_number";
         } else {
             System.out.println("Invalid input. Please try again.");
             searchRentableUI();
@@ -625,7 +627,7 @@ public class TheNewStaffMenu {
     }
     
     public static void searchRentalUI() {
-        Scanner scanner = new Scanner(System.in);
+        /*Scanner scanner = new Scanner(System.in);
         RentalInventory inventory = new RentalInventory();
         
         System.out.println("Please select an attribute to search by:\n"
@@ -652,10 +654,12 @@ public class TheNewStaffMenu {
         if(!type.equals("")) {
             System.out.println("Results: ");
             inventory.searchRentals(type, parameter);
-        }
+        }*/
+        System.out.println("If you are seeing this message Search Rentals has not been implemented");
     }
     
-    public static void viewRentableUI(){
+    public static void viewRentableUI() throws SQLException
+    {
         RentableInventory inventory = new RentableInventory();
         System.out.println("All rentables:");
         inventory.viewRentables();
@@ -673,19 +677,29 @@ public class TheNewStaffMenu {
         
         //Print UI choices
         System.out.println("Please select an operation: \n"
-                + "1) View all rentals\n");
+                + "1) View all rentals\n"
+                + "2) Search rentals\n"
+                + "3) Exit Rental Management");
+        method = scanner.nextInt();
         switch (method) {
-        case 1:
-            viewRentalUI();
+            case 1:
+                viewRentalUI();
+                rentalManagement();
+                break;
+            case 2:
+                searchRentalUI();
+                rentalManagement();
+                break;
+            case 3: break;
         }
     }
 
 
     private static void reservationManagement() throws ClassNotFoundException, SQLException {
-        new StaffRMI();    
+        new StaffRMI();
     }
 
-    private static void accountManagement() throws SQLException {
+    private static void accountManagement() throws SQLException, ClassNotFoundException {
         int staffAcctMngChoice = 0;
         System.out.println("Account Management Menu\n"
                 + "1) View Account\n"
@@ -697,6 +711,7 @@ public class TheNewStaffMenu {
                 + "7) Remove an Account\n"
                 + "8) Search for an Account\n"
                 + "9) View All Accounts\n"
+                + "10) Pay user Balance\n"
                 + "**) Any other option will return you to the Main Menu\n");
         Scanner sc = new Scanner(System.in);
         staffAcctMngChoice = sc.nextInt();
@@ -708,11 +723,11 @@ public class TheNewStaffMenu {
                     break;
             case 3: changePassword();
                     break;
-            case 4: issueAnID(); 
+            case 4: issueAnID();
                     break;
             case 5: createUserAccount();
                     break;
-            case 6: editUserAccount(); 
+            case 6: editUserAccount();
                     break;
             case 7: removeByID();
                     break;
@@ -720,11 +735,43 @@ public class TheNewStaffMenu {
                     break;
             case 9: viewAllAccounts();
                     break;
+            case 10:payUserBalance();
+                    break;
+                    
             default://staff main menu
                     System.out.println("Exiting account management");
                     break;
             }
         }
+
+    private static void payUserBalance() throws SQLException {
+        Scanner sc = new Scanner(System.in);
+        AccountCollection ac = new AccountCollection();
+        System.out.println("Enter user ID");
+        String userID = sc.next();
+        User u = (User)ac.search(userID);
+        if(u == null)
+        {
+            System.out.println("User not found");
+            return;
+        }
+        double balance = u.getBalance();
+        if(balance>0)
+        {
+            System.out.println("User balance = " + balance);
+            System.out.print("Enter amount to pay: $");
+            double toPay = sc.nextDouble();
+            u.decreaseBalance(toPay);
+            ac.updateBalance(u);
+            System.out.println("User "+u.getId()+" has paid $"+toPay);
+            System.out.println("Updated Balance for "+u.getId()+" = "+u.getBalance());
+        }
+        else
+        {
+            System.out.println("User does not have a balance");
+        }
+        
+    }
         
 }
     

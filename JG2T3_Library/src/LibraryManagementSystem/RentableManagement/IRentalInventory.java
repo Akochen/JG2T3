@@ -1,4 +1,4 @@
-package LBMS;
+package LibraryManagementSystem.RentableManagement;
 
 import java.util.ArrayList;
 

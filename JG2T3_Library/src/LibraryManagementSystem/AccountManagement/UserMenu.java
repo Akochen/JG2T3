@@ -1,14 +1,20 @@
-package LBMS;
+
+package LibraryManagementSystem.AccountManagement;
+import LibraryManagementSystem.RentableManagement.RentableInventory;
+import LibraryManagementSystem.ReservationManagement.InputValidation;
+import LibraryManagementSystem.ReservationManagement.UserRMI;
+
 import java.util.Scanner;
 import java.sql.*;
-public class TheNewUserMenu {
+public class UserMenu {
     public static String userID ="";
     static final String DRIVER = "com.mysql.jdbc.Driver";
     static final String DATABASE_URL = "jdbc:mysql://localhost/db_library?useSSL=false";
     static final String MYSQL_USERNAME ="root";
-    static final String MYSQL_PASSWORD ="root";
+    static final String MYSQL_PASSWORD ="g2t2";
     private static boolean isLoggedIn = false;
-    
+
+
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         Scanner sc = new Scanner(System.in);
         homeMenu(sc);
@@ -37,8 +43,8 @@ public class TheNewUserMenu {
                     isLoggedIn=(false);
                     break;
             case 3: System.out.println("Viewing all rentables");
-            		RentableInventory inventory = new RentableInventory();
-            		inventory.viewRentables();
+                    RentableInventory inventory = new RentableInventory();
+                    inventory.viewRentables();
                     break;
             default:
                     System.out.println("Invalid option, returning to menu..");
@@ -53,7 +59,7 @@ public class TheNewUserMenu {
         }
     }
 
-    private static void createUser() throws SQLException {
+    private static void createUser() throws SQLException, ClassNotFoundException {
         Connection myConn = DriverManager.getConnection(DATABASE_URL, MYSQL_USERNAME, MYSQL_PASSWORD);
         Statement myState = myConn.createStatement();
          ResultSet rstSet = null;
@@ -213,9 +219,61 @@ public class TheNewUserMenu {
         System.out.println("You have successfully logged out!");        
     }
 
-    private static void rentableManagement() {
-        System.out.println("You are in rentables");
+    private static void rentableManagement() throws SQLException
+    {
+        System.out.println("\nWould you like to search rentables?\n"
+                + "1) Yes\n"
+                + "2) No");
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
         
+        if(choice == 1) {
+            searchRentableUI();
+        } else {
+            return;
+        }
+        
+    }
+    
+    public static void searchRentableUI() throws SQLException
+    {
+        Scanner scanner = new Scanner(System.in);
+        RentableInventory inventory = new RentableInventory();
+        
+        System.out.println("\nPlease select an attribute to search by:\n"
+                + "1) SKU\n"
+                + "2) Title\n"
+                + "3) ISBN\n"
+                + "4) Condition\n"
+                + "5) Genre\n"
+                + "6) Type\n");
+        int choice = scanner.nextInt();
+        String type = "";
+        if(choice == 1) {
+            type = "sku";
+        } else if(choice == 2) {
+            type = "title";
+        }else if(choice == 3) {
+            type = "isbn";
+        }else if(choice == 4) {
+            type = "condition";
+        }else if(choice ==5) {
+            type = "genre";
+        }else if(choice ==6) {
+            type = "type";
+        } else {
+            System.out.println("Invalid input. Please try again.");
+            searchRentableUI();
+            return;
+        }
+        String parameter = "";
+        System.out.print("Please input what you would like to search for. \nSearch: ");
+        parameter = scanner.next();
+        
+        if(!type.equals("")) {
+            System.out.println("Results:");
+            inventory.searchRentables(type, parameter);
+        }
     }
 
     private static void reservationManagement() throws ClassNotFoundException, SQLException {
@@ -340,6 +398,8 @@ public class TheNewUserMenu {
         
     }
 }
+
+
 
 
 

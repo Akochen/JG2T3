@@ -1,4 +1,5 @@
-package LBMS;
+
+package LibraryManagementSystem.AccountManagement;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,8 +24,7 @@ public class AccountCollection
 	 * @author Jason Arikupurathu
 	 */
 
-	public boolean add(Staff s) 
-	{
+	public boolean add(Staff s) throws SQLException, ClassNotFoundException {
 		return jdbc.add(s);
 		
 	}

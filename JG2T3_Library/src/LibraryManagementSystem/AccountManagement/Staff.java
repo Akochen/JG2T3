@@ -1,4 +1,4 @@
-package LBMS;
+package LibraryManagementSystem.AccountManagement;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Scanner;
 /**
- * This class contains Staff’s personal data. 
+ * This class contains Staff's personal data. 
  * Since staff contains less information than user, this is our base class
  * 
  * @author Jason Arikupurathu

@@ -1,4 +1,5 @@
-package LBMS;
+
+package LibraryManagementSystem.AccountManagement;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,7 +21,7 @@ public class AccountCollectionJDBC
 	ArrayList<Staff> staffaccountCollection = new ArrayList();
 	static final String DATABASE_URL = "jdbc:mysql://localhost/db_library?useSSL=false";
 	static final String MYSQL_USERNAME ="root";
-	static final String MYSQL_PASSWORD ="root";
+	static final String MYSQL_PASSWORD ="g2t2";
 	Connection connection = null; // manages connection
     Statement statement = null; // query statement
     ResultSet resultSet = null; // manages results
@@ -34,64 +35,47 @@ public class AccountCollectionJDBC
 	 * @author Jason Arikupurathu
 	 */
 
-	public boolean add(Staff s) 
-	{
-		 try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			return false;
-		}
+	public boolean add(Staff s) throws SQLException, ClassNotFoundException {
+			Class.forName("com.mysql.jdbc.Driver");
 
-		    // establish connection to database
-		 try {
 			connection = DriverManager.getConnection( DATABASE_URL, MYSQL_USERNAME, MYSQL_PASSWORD);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			return false;
-		}
-	     try {
+
 			statement = connection.createStatement();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			return false;
-		}
+
 	     //if staff
 		    if(s instanceof User)
 		    {
 		    	useraccountCollection.add(s);
-		    	String sql = "INSERT INTO UserAccount " +
-		                      "VALUES ('"+s.getId()+"','"+s.getfName()+"','"+s.getlName()+"','"+s.getEmail()+"','"+s.getUsername()+"','"+s.getPassword()+"','"+s.getAddress().getStreetNum()+"','"+s.getAddress().getStreetName()+
-		                      "','"+s.getAddress().getCity()+"','"+s.getAddress().getState()+"','"+s.getAddress().getZipCode()+"','"+0.00+"')";
-		    	
-		    	
-		     
-			     try {
-						statement.executeUpdate(sql);
-						return true;
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						return false;
-					}
+		    	String sqlID ="INSERT INTO accountid (accountId) VALUES ('"+s.getId()+"')";
+		    	String sql ="INSERT INTO useraccount (UserID, FirstName, LastName, Email, " +
+							"Username,Password, StreetNum, StreetName, City, State, Zip, Balance) " +
+							"VALUES ('"+s.getId()+"','"+s.getfName()+"','"+s.getlName()+"','"+s.getEmail()+"','"+s.getUsername()+"','"+s.getPassword()+"','"+s.getAddress().getStreetNum()+"','"+s.getAddress().getStreetName()+
+		                    "','"+s.getAddress().getCity()+"','"+s.getAddress().getState()+"','"+s.getAddress().getZipCode()+"','"+0.00+"')";
+
+
+
+				statement.executeUpdate(sqlID);
+				statement.executeUpdate(sql);
+				return true;
+
 		    }
 		    
 	     if(s instanceof Staff)
 	     {
 	    	 staffaccountCollection.add(s);
-		     String sql = "INSERT INTO StaffAccount " +
-		                      "VALUES ('"+s.getId()+"','"+s.getfName()+"','"+s.getlName()+"','"+s.getEmail()+"','"+s.getUsername()+"','"+s.getPassword()+"','"+s.getAddress().getStreetNum()+"','"+s.getAddress().getStreetName()+
-		                      "','"+s.getAddress().getCity()+"','"+s.getAddress().getState()+"','"+s.getAddress().getZipCode()+"')";
+			 String sqlID ="INSERT INTO accountid (accountId) VALUES ('"+s.getId()+"')";
+			 String sql ="INSERT INTO staffaccount (StaffID, FirstName, LastName, Email, " +
+					 "Username,Password, StreetNum, StreetName, City, State, Zip) " +
+					 "VALUES ('"+s.getId()+"','"+s.getfName()+"','"+s.getlName()+"','"+s.getEmail()+"','"+s.getUsername()+"','"+s.getPassword()+"','"+s.getAddress().getStreetNum()+"','"+s.getAddress().getStreetName()+
+					 "','"+s.getAddress().getCity()+"','"+s.getAddress().getState()+"','"+s.getAddress().getZipCode()+"')";
 		     
 		     
 		     
-		     try 
-		     {
-					statement.executeUpdate(sql);
-					return true;
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					return false;
-				}
+
+			statement.executeUpdate(sqlID);
+			statement.executeUpdate(sql);
+			return true;
+
 	     }
 	    
 	     return false;	     
@@ -118,22 +102,25 @@ public class AccountCollectionJDBC
 		if(accountType == 'U') {
 			String sqlSelect = "SELECT * FROM useraccount WHERE UserID = " + "'"+id+"'";
 			String sqlDelete = "DELETE FROM useraccount WHERE UserID = " + "'"+id+"'";
+			String sqlDeleteID = "DELETE FROM accountId WHERE accountId = " + "'"+id+"'";
 			rstRemove = myState.executeQuery(sqlSelect);
 			
 			User user = null;
 			while(rstRemove.next())
 			{
 				Address a1 = new Address(rstRemove.getString("StreetNum"),rstRemove.getString("StreetName"),rstRemove.getString("City"),rstRemove.getString("State"),rstRemove.getString("Zip"));
-				user = new User(rstRemove.getString("UserID"),rstRemove.getString("FirstName"), rstRemove.getString("LastName"), rstRemove.getString("Email"), rstRemove.getString("Username"),rstRemove.getString("Password"), a1, rstRemove.getDouble("balance") );
+				user = new User(rstRemove.getString("UserID"),rstRemove.getString("FirstName"), rstRemove.getString("LastName"), rstRemove.getString("Email"), rstRemove.getString("Username"),rstRemove.getString("Password"), a1, rstRemove.getDouble("Balance") );
 				useraccountCollection.remove(user);
 			}
 			myState.executeUpdate(sqlDelete);
+			myState.executeUpdate(sqlDeleteID);
 			return user;
 		}
 		
 		if(accountType =='S') {
 			String sqlSelect = "SELECT * FROM staffaccount WHERE StaffID = " + "'"+id+"'";
 			String sqlDelete = "DELETE FROM staffaccount WHERE StaffID = " + "'"+id+"'";
+			String sqlDeleteID = "DELETE FROM accountId WHERE accountId = " + "'"+id+"'";
 			rstRemove = myState.executeQuery(sqlSelect);
 			Staff staff = null;
 			while(rstRemove.next())
@@ -143,6 +130,7 @@ public class AccountCollectionJDBC
 				staffaccountCollection.remove(staff);
 			}
 			myState.executeUpdate(sqlDelete);
+			myState.executeUpdate(sqlDeleteID);
 			return staff;
 		}
 		
@@ -209,10 +197,8 @@ public class AccountCollectionJDBC
 	
 	/**
 	 * 
-	 * @param user
-	 *            The user object that contains updated fields
-	 * @param id
-	 *            The ID of the user that wants to update something
+	 * @param s
+	 *            The user object that contains updated field
 	 * 
 	 * @author Kwesi Quallis
 	 */
@@ -241,12 +227,10 @@ public class AccountCollectionJDBC
 	
 	/**
 	 * 
-	 * @param password
+	 * @param newPassword
 	 *            The updated password string
-	 * @param user
+	 * @param s
 	 *            The updated user object with the new password
-	 * @param id
-	 *            The ID of the user that is to be used to update the account
 	 * 
 	 * @author Kyle Coltellino
 	 * @throws SQLException 
@@ -310,7 +294,7 @@ public class AccountCollectionJDBC
 
 	/**
 	 * 
-	 * @param User object to get ID as well as current balance
+	 * @param u User object to get ID as well as current balance
 	 * @return The updated user object
 	 * @throws SQLException
 	 * @author Jason Arikupurathu
