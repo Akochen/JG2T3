@@ -17,7 +17,7 @@ public interface IRentableInventory {
 	 * @param rentableSKU The SKU of the Rentable that needs to be removed
 	 * @return returns the removed Rentable
 	 */
-	public Rentable removeRentable(int rentableSKU);
+	public Rentable removeRentable(String rentableSKU);
 	
 	/**
 	 * Searches the database for a list of Rentables

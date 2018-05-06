@@ -24,12 +24,12 @@ public class RentableInventory implements IRentableInventory {
 
 	/**
 	 * Deletes a Rentable with a specific SKU from the database
-	 * @param rentableSKU The SKU of the Rentable that needs to be removed
+	 * @param sku The SKU of the Rentable that needs to be removed
 	 * @return returns the removed Rentable
 	 */
 	@Override
-	public Rentable removeRentable(int rentableSKU) {
-		return inventory.removeRentable(rentableSKU);
+	public Rentable removeRentable(String sku) {
+		return inventory.removeRentable(sku);
 	}
 	
 	/**

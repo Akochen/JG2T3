@@ -1,7 +1,7 @@
 package LibraryManagementSystem.RentableManagement;
 
 public class Rentable {
-	
+
 	private String sku;
 	private String title;
 	private String isbn;
@@ -9,16 +9,20 @@ public class Rentable {
 	private String genre;
 	private String type;
 	private String upc;
-	
-	
+
 	/**
 	 * Constructor for creating a DVD
-	 * @param sku The sku of the Rentable
-	 * @param title The title of the Rentable
-	 * @param condition the condition/damage of the Rentable
-	 * @param genre the genre of the Rentable
+	 * 
+	 * @param sku
+	 *            The sku of the Rentable
+	 * @param title
+	 *            The title of the Rentable
+	 * @param condition
+	 *            the condition/damage of the Rentable
+	 * @param genre
+	 *            the genre of the Rentable
 	 */
-	public Rentable(String sku, String upc, String title, String condition, String genre){
+	public Rentable(String sku, String upc, String title, String condition, String genre) {
 		this.sku = sku;
 		this.upc = upc;
 		this.title = title;
@@ -26,15 +30,22 @@ public class Rentable {
 		this.genre = genre;
 		type = "DVD";
 	}
-	
+
 	/**
 	 * Constructor for creating a book, or eBook
-	 * @param sku The sku of the Rentable
-	 * @param title The title of the Rentable
-	 * @param isbn The ISBN number of the Rentable
-	 * @param condition the condition/damage of the Rentable
-	 * @param genre the genre of the Rentable
-	 * @param type whether the Rentable is an eBook, or book
+	 * 
+	 * @param sku
+	 *            The sku of the Rentable
+	 * @param title
+	 *            The title of the Rentable
+	 * @param isbn
+	 *            The ISBN number of the Rentable
+	 * @param condition
+	 *            the condition/damage of the Rentable
+	 * @param genre
+	 *            the genre of the Rentable
+	 * @param type
+	 *            whether the Rentable is an eBook, or book
 	 */
 	public Rentable(String sku, String upc, String title, String isbn, String condition, String genre, String type) {
 		this.sku = sku;
@@ -54,7 +65,8 @@ public class Rentable {
 	}
 
 	/**
-	 * @param condition the condition to set
+	 * @param condition
+	 *            the condition to set
 	 * @return True if condition successfully changed
 	 */
 	public boolean setCondition(String condition) {
@@ -68,7 +80,7 @@ public class Rentable {
 	public String getSku() {
 		return sku;
 	}
-	
+
 	/**
 	 * @return the upc
 	 */
@@ -103,8 +115,16 @@ public class Rentable {
 	public String getType() {
 		return type;
 	}
-	
-	
-	
-	
+
+	public String toString() {
+		if (type.toLowerCase().equals("book")) {
+			return "SKU: " + sku + ", UPC: " + upc + ", Title: " + title + ", ISBN: " + isbn + ", Genre: " + genre
+					+ ", Type: " + type;
+		} else if(type.toLowerCase().equals("dvd")) {
+			return "SKU: " + sku + ", UPC: " + upc + ", Title: " + title + ", Genre: " + genre + ", Type: " + type;
+		}else {
+			return "";
+		}
+	}
+
 }
