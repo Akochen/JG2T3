@@ -36,13 +36,13 @@ public class RentableInventoryJDBC implements IRentableInventory {
 	public String addRentable(Rentable r) {
 		String query = r.getType();
 		String endMsg = "Rentable successfully added!";
-
+		
 		if (r.getType().toLowerCase().equals("dvd")) {
 			query = "INSERT INTO Rentable VALUES('" + r.getSku() + "', '" + r.getUpc() + "', '" + r.getTitle() + "', "
-					+ "null" + ", '" + r.getCondition() + "', '" + r.getGenre() + "', '" + r.getType() + "', 1);";
+					+ "null" + ", '" + r.getCondition() + "', '" + r.getGenre() + "', '" + r.getType() + "', " + r.getAvailability()+ ");";
 		} else if (r.getType().toLowerCase().equals("book") || r.getType().toLowerCase().equals("ebook")) {
 			query = "INSERT INTO Rentable VALUES('" + r.getSku() + "', '" + r.getUpc() + "', '" + r.getTitle() + "', '"
-					+ r.getIsbn() + "', '" + r.getCondition() + "', '" + r.getGenre() + "', '" + r.getType() + "', 1);";
+					+ r.getIsbn() + "', '" + r.getCondition() + "', '" + r.getGenre() + "', '" + r.getType() + "', " + r.getAvailability() + ");";
 		}
 		Statement statement = null;
 		try {
@@ -205,10 +205,12 @@ public class RentableInventoryJDBC implements IRentableInventory {
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql);
 
-			if (!resultSet.next())
+			if (!resultSet.first()) {
 				System.out.println("No Results Found");
+			}
+			resultSet.beforeFirst();
 			while (resultSet.next()) {
-				String type = resultSet.getString(6);
+				String type = resultSet.getString(7);
 
 				if (type.toLowerCase().equals("book") || type.toLowerCase().equals("ebook")) {
 					System.out.println("SKU: " + resultSet.getString(1) + ", Title: " + resultSet.getString(2)
@@ -218,10 +220,9 @@ public class RentableInventoryJDBC implements IRentableInventory {
 					System.out.println("SKU: " + resultSet.getString(1) + ", Title: " + resultSet.getString(2)
 							+ ", Condition: " + resultSet.getString(4) + ", Genre: " + resultSet.getString(5)
 							+ ", Type: " + resultSet.getString(6));
-				} else if (type.toLowerCase().equals("room")) {
-					System.out.println("SKU: " + resultSet.getString(1) + ", Room Number: " + resultSet.getString(7));
+				} else {
+					System.out.println("Invalid Type");
 				}
-
 			}
 			return true;
 		} catch (SQLException e) {

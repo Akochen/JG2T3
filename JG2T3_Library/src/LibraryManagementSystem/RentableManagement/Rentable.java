@@ -9,6 +9,7 @@ public class Rentable {
 	private String genre;
 	private String type;
 	private String upc;
+	private String availability;
 
 	/**
 	 * Constructor for creating a DVD
@@ -21,8 +22,10 @@ public class Rentable {
 	 *            the condition/damage of the Rentable
 	 * @param genre
 	 *            the genre of the Rentable
+	 * @param availability
+	 * 			  If the rentable is available
 	 */
-	public Rentable(String sku, String upc, String title, String condition, String genre) {
+	public Rentable(String sku, String upc, String title, String condition, String genre, String availability) {
 		this.sku = sku;
 		this.upc = upc;
 		this.title = title;
@@ -46,8 +49,10 @@ public class Rentable {
 	 *            the genre of the Rentable
 	 * @param type
 	 *            whether the Rentable is an eBook, or book
+	 * @param availability
+	 * 			  If the rentable is available
 	 */
-	public Rentable(String sku, String upc, String title, String isbn, String condition, String genre, String type) {
+	public Rentable(String sku, String upc, String title, String isbn, String condition, String genre, String type, String availability) {
 		this.sku = sku;
 		this.upc = upc;
 		this.title = title;
@@ -115,7 +120,17 @@ public class Rentable {
 	public String getType() {
 		return type;
 	}
-
+	
+	/**
+	 * @return The availability
+	 */
+	public String getAvailability() {
+		return availability;
+	}
+	
+	/**
+	 * Converts Rentable to a printable string
+	 */
 	public String toString() {
 		if (type.toLowerCase().equals("book")) {
 			return "SKU: " + sku + ", UPC: " + upc + ", Title: " + title + ", ISBN: " + isbn + ", Genre: " + genre
@@ -125,6 +140,20 @@ public class Rentable {
 		}else {
 			return "";
 		}
+	}
+	
+	/**
+	 * checks if rentable is invalid and has a null field or is neither a book or dvd
+	 * @return Returns true if rentable is invalid and has a null field or is neither a book or dvd
+	 */
+	public boolean isInvalid() {
+		if( (sku=="" || upc=="" || title=="" || isbn=="" || genre=="") && type.toLowerCase().equals("book")) {
+			return true;
+		} else if( (sku=="" || upc=="" || title=="" || genre=="") && type.toLowerCase().equals("dvd")) {
+			return true;
+		}
+		
+		return false;
 	}
 
 }

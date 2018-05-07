@@ -83,7 +83,7 @@ public class StaffRentableManagementInterface {
 			}
 
 			// Creates Rentable and calls the method to add it to the db
-			System.out.println(inventory.addRentable(new Rentable(sku, upc, title, isbn, condition, genre, "Book")));
+			System.out.println(inventory.addRentable(new Rentable(sku, upc, title, isbn, condition, genre, "Book", "1")));
 			break;
 		case 2:
 			// Asks for input information about Rentable
@@ -104,7 +104,7 @@ public class StaffRentableManagementInterface {
 			}
 
 			// Creates Rentable and calls the method to add it to the db
-			System.out.println(inventory.addRentable(new Rentable(sku, upc, title, condition, genre)));
+			System.out.println(inventory.addRentable(new Rentable(sku, upc, title, condition, genre, "1")));
 			break;
 		case 3:
 			// Asks for input information about Rentable
@@ -128,7 +128,7 @@ public class StaffRentableManagementInterface {
 			}
 
 			// Creates Rentable and calls the method to add it to the db
-			System.out.println(inventory.addRentable(new Rentable(sku, upc, title, isbn, condition, genre, "EBook")));
+			System.out.println(inventory.addRentable(new Rentable(sku, upc, title, isbn, condition, genre, "EBook", "1")));
 			break;
 		default:
 			// scanner.close();
