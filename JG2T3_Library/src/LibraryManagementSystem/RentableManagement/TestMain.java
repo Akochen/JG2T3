@@ -12,12 +12,13 @@ public class TestMain {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println("Please select an operation: \n"
+				+ "5) Check In\n"
+				+ "4) View all rentals\n"
 				+ "3) View all rentables\n"
 				+ "2) Search Rentables\n"
 				+ "1) Add a new rentable");
 		Scanner scanner = new Scanner(System.in);
 		int method = scanner.nextInt();
-		scanner.close();
 		switch (method) {
 			case 1:
 				addRentableUI();
@@ -32,7 +33,8 @@ public class TestMain {
 				viewRentalUI();
 				break;
 			case 5:
-				//TODO check-in code
+				checkInUI();
+				break;
 			case 6: 
 				//TODO check-out code
 				break;
@@ -160,7 +162,7 @@ public class TestMain {
 	public static void viewRentalUI(){
 		
 		RentalInventory inventory = new RentalInventory();
-		inventory.viewRentals();
+		System.out.println(inventory.viewRentals());
 	}
 	
 	public static void searchRentalUI() {
@@ -194,5 +196,14 @@ public class TestMain {
         }
     }
 
+	public static void checkInUI() {
+		Scanner scanner = new Scanner(System.in);
+		RentalInventory inventory = new RentalInventory();
+		
+		System.out.println("Please input the ID for the item you wish to check in:");
+		int id = scanner.nextInt();
+		System.out.println("Item is reserved by: " + inventory.checkIn(id));
+		System.out.println("Item was Checked In.");
 
+	}
 }

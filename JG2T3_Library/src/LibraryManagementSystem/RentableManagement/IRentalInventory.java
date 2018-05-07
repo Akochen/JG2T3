@@ -9,7 +9,7 @@ public interface IRentalInventory {
 	 * @param sku the SKU of the Rentable being checked in
 	 * @return returns true if the Rentable is successfully checked in
 	 */
-	public boolean checkIn(int sku);
+	public ArrayList<String> checkIn(int rentableId);
 	
 	/**
 	 * Checks a Rentable out of the library and creates a Rental for it
@@ -38,6 +38,6 @@ public interface IRentalInventory {
 	 * Used for displaying all existing rentals
 	 * @return True if all Rentals are successfully printed out
 	 */
-	public boolean viewRentals();
+	public ArrayList<String> viewRentals();
 	
 }

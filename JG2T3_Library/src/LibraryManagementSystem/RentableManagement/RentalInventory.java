@@ -17,8 +17,8 @@ public class RentalInventory implements IRentalInventory {
 	 * @return returns true if the Rentable is successfully checked in
 	 */
 	@Override
-	public boolean checkIn(int sku) {
-		return inventory.checkIn(sku);
+	public ArrayList<String> checkIn(int rentableId) {
+		return inventory.checkIn(rentableId);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class RentalInventory implements IRentalInventory {
 	 * @return Returns an ArrayList of all existing Rentals
 	 */
 	@Override
-	public boolean viewRentals() {
+	public ArrayList<String> viewRentals() {
 		return inventory.viewRentals();
 	}
 
