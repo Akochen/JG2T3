@@ -17,7 +17,6 @@ public class TestMain {
 				+ "1) Add a new rentable");
 		Scanner scanner = new Scanner(System.in);
 		int method = scanner.nextInt();
-		scanner.close();
 		switch (method) {
 			case 1:
 				addRentableUI();
@@ -113,29 +112,30 @@ public class TestMain {
 		RentableInventory inventory = new RentableInventory();
 		
 		System.out.println("Please select an attribute to search by:\n"
-				+ "1) SKU\n"
-				+ "2) Title\n"
-				+ "3) ISBN\n"
-				+ "4) Condition\n"
-				+ "5) Genre\n"
-				+ "6) Type\n"
-				+ "7) Room Number");
+				+ "1) Rentable ID\n"
+				+ "2) Upc\n"
+				+ "3) Title\n"
+				+ "4) ISBN\n"
+				+ "5) Condition\n"
+				+ "6) Genre\n"
+				+ "7) Type");
 		int choice = scanner.nextInt();
 		String type = "";
+		
 		if(choice == 1) {
-			type = "sku";
+			type = "rentableId";
 		} else if(choice == 2) {
-			type = "title";
+			type = "upc";
 		}else if(choice == 3) {
-			type = "isbn";
+			type = "title";
 		}else if(choice == 4) {
-			type = "condition";
+			type = "isbn";
 		}else if(choice ==5) {
-			type = "genre";
+			type = "condition";
 		}else if(choice ==6) {
-			type = "type";
+			type = "genre";
 		}else if(choice ==7) {
-			type = "room_number";
+			type = "type";
 		} else {
 			System.out.println("Invalid input. Please try again.");
 			searchRentableUI();
@@ -147,14 +147,14 @@ public class TestMain {
 		
 		if(!type.equals("")) {
 			System.out.println("Results:");
-			inventory.searchRentables(type, parameter);
+			System.out.println(inventory.searchRentables(type, parameter));
 		}
 	}
 	
 	public static void viewRentableUI(){
 		
 		RentableInventory inventory = new RentableInventory();
-		inventory.viewRentables();
+		System.out.print(inventory.viewRentables());
 	}
 	
 	public static void viewRentalUI(){
