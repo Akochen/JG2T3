@@ -147,7 +147,7 @@ public class RentableInventoryJDBC implements IRentableInventory {
 		Statement statement = null;
 		ResultSet resultSet;
 		try {
-			conn = DriverManager.getConnection(URL, uName, "");
+			conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql);
 
@@ -194,7 +194,7 @@ public class RentableInventoryJDBC implements IRentableInventory {
 		Statement statement = null;
 		ResultSet resultSet;
 		try {
-			conn = DriverManager.getConnection(URL, uName, "");
+			conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql);
 

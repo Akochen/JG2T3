@@ -12,7 +12,7 @@ public class UserMenu {
     static final String DRIVER = "com.mysql.jdbc.Driver";
     static final String DATABASE_URL = "jdbc:mysql://localhost/db_library?useSSL=false";
     static final String MYSQL_USERNAME ="root";
-    static final String MYSQL_PASSWORD ="root";
+    static final String MYSQL_PASSWORD ="";
     private static boolean isLoggedIn = false;
 
 

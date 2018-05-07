@@ -139,31 +139,32 @@ public class StaffRentableManagementInterface {
 
 	public static void viewRentableUI() throws SQLException {
 		RentableInventory inventory = new RentableInventory();
-		System.out.println("All rentables:");
-		inventory.viewRentables();
+		System.out.println("All rentables:" + inventory.viewRentables());
 	}
 
 	public static void searchRentableUI() throws SQLException {
 		Scanner scanner = new Scanner(System.in);
 		RentableInventory inventory = new RentableInventory();
 
-		System.out.println("Please select an attribute to search by:\n" + "1) SKU\n" + "2) Title\n" + "3) ISBN\n"
-				+ "4) Condition\n" + "5) Genre\n" + "6) Type\n" + "");
+		System.out.println("Please select an attribute to search by:\n" + "1) Rentabl ID\n" + "2) UPC\n" + "3) Title\n" + "4) ISBN\n"
+				+ "5) Condition\n" + "6) Genre\n" + "7) Type\n" + "");
 		int choice = scanner.nextInt();
 		String type = "";
 		if (choice == 1) {
-			type = "sku";
+			type = "rentableId";
 		} else if (choice == 2) {
-			type = "title";
+			type = "upc";
 		} else if (choice == 3) {
-			type = "isbn";
+			type = "title";
 		} else if (choice == 4) {
-			type = "condition";
+			type = "isbn";
 		} else if (choice == 5) {
-			type = "genre";
+			type = "condition";
 		} else if (choice == 6) {
+			type = "genre";
+		} else if (choice == 7){
 			type = "type";
-		} else {
+		}else{
 			System.out.println("Invalid input. Please try again.");
 			searchRentableUI();
 			return;
@@ -174,8 +175,7 @@ public class StaffRentableManagementInterface {
 		// scanner.close();
 
 		if (!type.equals("")) {
-			System.out.println("Results:");
-			inventory.searchRentables(type, parameter);
+			System.out.println("Results:" + inventory.searchRentables(type, parameter));
 		}
 	}
 
