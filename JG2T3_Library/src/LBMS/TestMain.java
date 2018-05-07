@@ -14,7 +14,8 @@ public class TestMain {
 		System.out.println("Please select an operation: \n"
 				+ "3) View all rentables\n"
 				+ "2) Search Rentables\n"
-				+ "1) Add a new rentable");
+				+ "1) Add a new rentable\n"
+				+ "5) searchRental");
 		Scanner scanner = new Scanner(System.in);
 		int method = scanner.nextInt();
 		switch (method) {
@@ -31,7 +32,8 @@ public class TestMain {
 				viewRentalUI();
 				break;
 			case 5:
-				//TODO check-in code
+				searchRentalUI();
+				break;
 			case 6: 
 				//TODO check-out code
 			case 7:

@@ -626,7 +626,7 @@ public class StaffUI2 {
     }
     
     public static void searchRentalUI() {
-        /*Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         RentalInventory inventory = new RentalInventory();
         
         System.out.println("Please select an attribute to search by:\n"
@@ -653,8 +653,7 @@ public class StaffUI2 {
         if(!type.equals("")) {
             System.out.println("Results: ");
             inventory.searchRentals(type, parameter);
-        }*/
-    	System.out.println("If you are seeing this message Search Rentals has not been implemented");
+        }
     }
     
     public static void viewRentableUI(){
