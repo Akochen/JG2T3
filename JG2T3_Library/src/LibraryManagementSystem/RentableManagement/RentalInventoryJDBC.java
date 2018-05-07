@@ -1,13 +1,14 @@
-package LBMS;
+package LibraryManagementSystem.RentableManagement;
 
-import java.util.ArrayList;
 import java.sql.*;
+import java.util.ArrayList;
+
+import LibraryManagementSystem.ReservationManagement.ReservationCollection;
+import LibraryManagementSystem.ReservationManagement.ReservationCollectionJDBC;
 
 public class RentalInventoryJDBC implements IRentalInventory {
-	private Connection conn = null;
 	private final String URL = "jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true";
 	private final String uName = "root";
-	private final String uPass = "root";
 
 	public RentalInventoryJDBC() {
 		try {
@@ -24,9 +25,51 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 * @return returns true if the Rentable is successfully checked in
 	 */
 	@Override
-	public boolean checkIn(int sku) {
-		// TODO Auto-generated method stub
-		return false;
+	public ArrayList<String> checkIn(int rentableId) {
+		String sql1 = "";
+		String sql2 = "";
+		ArrayList<String> reservedBy = new ArrayList<String>();
+		sql1 = "SELECT * FROM Rentable WHERE Rentable.rentableId = '" + rentableId + "';";
+		sql2 = "DELETE FROM Rental WHERE Rental.rentableId = '" + rentableId + "';";
+		Connection conn = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+
+		try { //include reservation for this to work!!!!!
+			conn = DriverManager.getConnection(URL, uName, "");
+			statement = conn.createStatement();
+			resultSet = statement.executeQuery(sql1);
+			
+			if (!resultSet.first()){
+				reservedBy.add("No Reservtions Found");
+			}
+			String upcToEnter = resultSet.getString("upc");
+			if ( ReservationCollectionJDBC.searchByUpc( upcToEnter ) ){
+				reservedBy.add( resultSet.getString("userId") );
+			}
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		try {
+			statement.executeUpdate(sql2);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return reservedBy;
+
 	}
 
 	/**
@@ -61,34 +104,24 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	@Override
 	public boolean searchRentals(String searchType, String searchParameters) {
 		boolean result = false;
-		String sql = "SELECT * FROM rental, rentable WHERE rental.sku = rentable.sku AND rentable.type = ? AND rentable.title LIKE ?;";
-		PreparedStatement statement = null;
+		String sql = "SELECT * FROM rental, rentable WHERE rental.rentableID = rentable.rentableID AND rentable.type = ? AND rentable.title LIKE ?;";
 		ResultSet resultSet;
-		try {
-			conn = DriverManager.getConnection(URL, uName, uPass);
-			statement = conn.prepareStatement(sql);
+		try (
+			Connection conn = JDBCConfig.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+		) {
 			statement.setString(1, searchType);
 			statement.setString(2, searchParameters);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				System.out.println("SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
-						+ ", End Date: " + resultSet.getString(3) + ", User Id: " + resultSet.getString(4)
-						+ ", Times Renewed: " + resultSet.getString(5));
+				String toPrint = "SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
+				+ ", End Date: " + resultSet.getString(3) + ", User Id: " + resultSet.getString(4)
+				+ ", Times Renewed: " + resultSet.getString(5);
+				System.out.println(toPrint);
 			}
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 		return result;
 
@@ -100,22 +133,29 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 * @return Returns an ArrayList of all existing Rentals
 	 */
 	@Override
-	public boolean viewRentals() {
+	public ArrayList<String> viewRentals() {
 		String sql = "";
-		boolean result = false;
+		ArrayList<String> result = new ArrayList<String>();
 		sql = "SELECT * FROM Rental;";
+		Connection conn = null;
 		Statement statement = null;
 		ResultSet resultSet;
 		try {
-			conn = DriverManager.getConnection(URL, uName, uPass);
+			conn = DriverManager.getConnection(URL, uName, "");
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				System.out.println("SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
-						+ ", End Date: " + resultSet.getString(3) + ", User Id: " + resultSet.getString(4)
-						+ ", Times Renewed: " + resultSet.getString(5));
+			
+			if (!resultSet.first()){
+				result.add("No Rentals Found");
 			}
-			return true;
+			do
+				result.add("Rentable ID: " + resultSet.getString(1) 
+				+ ", Start Date: " + resultSet.getString(2)
+				+ ", End Date: " + resultSet.getString(3) 
+				+ ", User Id: " + resultSet.getString(4)
+				+ ", Times Renewed: " + resultSet.getString(5) + "\n");
+			while (resultSet.next());
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

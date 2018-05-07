@@ -1,4 +1,4 @@
-package LBMS;
+package LibraryManagementSystem.RentableManagement;
 import java.util.ArrayList;
 import java.sql.*;
 
@@ -18,29 +18,18 @@ public class RentableInventory implements IRentableInventory {
 	 * @return returns true if Rentable was successfully added
 	 */
 	@Override
-	public boolean addRentable(Rentable r) {
+	public String addRentable(Rentable r) {
 		return inventory.addRentable(r);
 	}
 
 	/**
-	 * Checks if a book or DVD is available
-	 * @param identifier the unique attribute that determines the title or room number of the Rentable
-	 * @param type The type of Rentable being checked (DVD or Book)
-	 * @return Returns true if there are more copies of the book than there are Rentals for the book
-	 */
-	@Override
-	public boolean isAvailable(String identifier, String type) {
-		return inventory.isAvailable(identifier, type);
-	}
-
-	/**
 	 * Deletes a Rentable with a specific SKU from the database
-	 * @param rentableSKU The SKU of the Rentable that needs to be removed
+	 * @param sku The SKU of the Rentable that needs to be removed
 	 * @return returns the removed Rentable
 	 */
 	@Override
-	public Rentable removeRentable(int rentableSKU) {
-		return inventory.removeRentable(rentableSKU);
+	public Rentable removeRentable(String sku) {
+		return inventory.removeRentable(sku);
 	}
 	
 	/**
@@ -50,7 +39,7 @@ public class RentableInventory implements IRentableInventory {
 	 * @return True if the search is successful and the desired Rentables are printed out
 	 */
 	@Override
-	public boolean searchRentables(String searchType, String searchParameter) {
+	public ArrayList<String> searchRentables(String searchType, String searchParameter) {
 		return inventory.searchRentables(searchType, searchParameter);
 	}
 
@@ -59,7 +48,7 @@ public class RentableInventory implements IRentableInventory {
 	 * @return True if all Rentables are successfully printed out
 	 */
 	@Override
-	public boolean viewRentables() {
+	public ArrayList<String> viewRentables() {
 		return inventory.viewRentables();
 	}
 

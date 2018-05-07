@@ -1,4 +1,5 @@
-package LBMS;
+
+package LibraryManagementSystem.ReservationManagement;
 
 import java.sql.*;
 
@@ -12,17 +13,17 @@ public class ReservationCollection
      * based on those attributes. Then adds that reservation
      * to the database.
      *
-     * @param newUserId       ID of the user account that the reservation is under.
-     * @param newRentableId   ID of the rentable that is reserved.
-     * @param newRentableType Type of the rentable that is reserved.
+     * @param newUserId          ID of the user account that the reservation is under.
+     * @param newUpc             ID of the upc that is reserved.
+     * @param newReservationType Type of the upc that is reserved.
      * @return Created reservation.
      * @throws SQLException Executes SQL database query.
      */
-    public static Reservation createReservation(String newRentableId, String newUserId, String newRentableType) throws SQLException
+    public static Reservation createReservation(String newUpc, String newUserId, String newReservationType) throws SQLException
     {
-        return ReservationCollectionJDBC.createReservation(newRentableId, newUserId, newRentableType);
+        return ReservationCollectionJDBC.createReservation(newUpc, newUserId, newReservationType);
     }
-    
+
     /**
      * Searches for a reservation ID in the database and, if found,
      * deletes the reservation with that reservation ID. Else, return false.
@@ -35,23 +36,23 @@ public class ReservationCollection
     {
         return ReservationCollectionJDBC.deleteReservation(idToDelete);
     }
-    
+
     /**
      * Builds a formatted string containing all the data of reservations in the database.
      * Is able to show a more narrow viewing of reservations based on the given 'selection' and 'idToView'.
      *
-     * @param rentableIdToView If selection is '2' or '3', builds a string according to this given user/rentable ID.
-     * @param userIdToView     If selection is '2' or '3', builds a string according to this given user/rentable ID.
-     * @param selection        '2' views by user ID, '3' views by rentable ID, and any
-     *                         other number views all reservations regardless of ID.
+     * @param upcToView    If selection is '2' or '3', builds a string according to this given user/upc ID.
+     * @param userIdToView If selection is '2' or '3', builds a string according to this given user/upc ID.
+     * @param selection    '2' views by user ID, '3' views by upc ID, and any
+     *                     other number views all reservations regardless of ID.
      * @return String of all reservations made in association with the given ID.
      * @throws SQLException Executes SQL database query.
      */
-    public static String viewReservations(String reservationIdToView, String rentableIdToView, String userIdToView, String selection) throws SQLException
+    public static String viewReservations(String reservationIdToView, String upcToView, String userIdToView, String selection) throws SQLException
     {
-        return ReservationCollectionJDBC.viewReservations(reservationIdToView, rentableIdToView, userIdToView, selection);
+        return ReservationCollectionJDBC.viewReservations(reservationIdToView, upcToView, userIdToView, selection);
     }
-    
+
     /**
      * Takes a reservation ID of a reservation in the database that the logged in user has access to,
      * then cancels (calls deleteReservation on) the reservation.
@@ -65,7 +66,7 @@ public class ReservationCollection
     {
         return ReservationCollectionJDBC.cancelReservation(reservationIdToCancel, userIdLoggedIn);
     }
-    
+
     /**
      * Calls deleteReservation on all inactive reservations in the database.
      *
@@ -76,7 +77,7 @@ public class ReservationCollection
     {
         return ReservationCollectionJDBC.deleteAllExpiredReservations();
     }
-    
+
     /**
      * Searches for a reservation in the database by reservation ID.
      *
@@ -88,19 +89,19 @@ public class ReservationCollection
     {
         return ReservationCollectionJDBC.searchByReservationId(idToSearch);
     }
-    
+
     /**
-     * Searches for a reservation in the database by rentable ID.
+     * Searches for a reservation in the database by upc ID.
      *
-     * @param idToSearch Rentable ID to search for.
-     * @return True if any reservation is found with the given rentable ID; false if none.
+     * @param upcToSearch upc ID to search for.
+     * @return True if any reservation is found with the given upc ID; false if none.
      * @throws SQLException Executes SQL database query.
      */
-    public static Boolean searchByRentableId(String idToSearch) throws SQLException
+    public static Boolean searchByUpc(String upcToSearch) throws SQLException
     {
-        return ReservationCollectionJDBC.searchByRentableId(idToSearch);
+        return ReservationCollectionJDBC.searchByUpc(upcToSearch);
     }
-    
+
     /**
      * Searches for a reservation in the database by user ID.
      *
@@ -112,7 +113,7 @@ public class ReservationCollection
     {
         return ReservationCollectionJDBC.searchByUserId(idToSearch);
     }
-    
+
     /**
      * Returns true if the reservations table of the database is empty; false if not.
      *
@@ -122,5 +123,28 @@ public class ReservationCollection
     public static Boolean isEmpty() throws SQLException
     {
         return ReservationCollectionJDBC.isEmpty();
+    }
+
+    /**
+     * Takes a upc and returns its availability status.
+     *
+     * @param upcToSearch Upc to search and get availability.
+     * @return true if available; false if not.
+     * @throws SQLException executes SQL query.
+     */
+    public static boolean isAvailable(String upcToSearch) throws SQLException
+    {
+        return ReservationCollectionJDBC.isAvailable(upcToSearch);
+    }
+
+    /**
+     * Sets a a rentable with a given upc to the given availability status.
+     *
+     * @param upcToSet    upc to update availability of.
+     * @param statusToSet availability status to set.
+     */
+    public static void setRentableAvailabilityByUpc(String upcToSet, boolean statusToSet) throws SQLException
+    {
+        ReservationCollectionJDBC.setRentableAvailabilityByUpc(upcToSet, statusToSet);
     }
 }

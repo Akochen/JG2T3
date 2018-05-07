@@ -1,24 +1,25 @@
-package LBMS;
+
+package LibraryManagementSystem.ReservationManagement;
 
 import java.sql.SQLException;
 import java.util.Scanner;
 
 /**
- * User Reservation Management Interface; for use in Main method.
+ * User Reservation Management Interface; for use in TestRMI method.
  */
-class UserRMI//User Reservation Management Interface
+public class UserRMI//User Reservation Management Interface
 {
     /**
      * Logged in user account id.
      */
     private String userIdLoggedIn;
-    
+
     /**
      * Instantiates the reservation management interface.
      *
      * @throws SQLException Initializes SQL statement variable.
      */
-    UserRMI(String userId) throws SQLException, ClassNotFoundException
+    public UserRMI(String userId) throws SQLException, ClassNotFoundException
     {
         //enable reservationCollection methods
         new ReservationCollectionJDBC();
@@ -27,7 +28,7 @@ class UserRMI//User Reservation Management Interface
         //display reservation management main menu to user
         manageReservationsUser();
     }
-    
+
     /**
      * Displays the reservations management main menu.
      * Allows the staff to manipulate the data in the database of reservations.
@@ -48,27 +49,27 @@ class UserRMI//User Reservation Management Interface
                     "\n> ");
             selection = scanner.next();
             selection = InputValidation.validateSelection(selection, 4);
-            
+
             switch (selection)
             {
                 case "1"://create reservations
                     createReservationUser();
                     break;
-                
+
                 case "2"://cancel reservations
                     cancelReservations();
                     break;
-                
+
                 case "3"://view reservations
                     viewReservationsUser();
                     break;
-                
+
                 case "4"://user main menu
                     break;//exit menu
             }
         }
     }
-    
+
     /**
      * Displays the create reservations menu for a user member.
      * Allows the user to insert data into the database of reservations.
@@ -78,7 +79,7 @@ class UserRMI//User Reservation Management Interface
     private void createReservationUser() throws SQLException
     {
         Scanner stringScanner = new Scanner(System.in);
-        
+
         String selection = "0";
         while (!selection.equals("4"))
         {
@@ -90,19 +91,25 @@ class UserRMI//User Reservation Management Interface
                     "\n> ");
             selection = stringScanner.next();
             selection = InputValidation.validateSelection(selection, 4);
-            
-            String rentableIdToReserve;
+
+            String upcToReserve;
             switch (selection)
             {
                 case "1": //to reserve item
-                    System.out.print("Enter the Item's ID:\n> ");
-                    rentableIdToReserve = stringScanner.next();
-                    rentableIdToReserve = InputValidation.validateNumericId(rentableIdToReserve, 7);
-                    Reservation itemReservation = ReservationCollection.createReservation(rentableIdToReserve, userIdLoggedIn, "ITEM");
-                    
-                    System.out.println("Created a new item reservation...\n" + itemReservation);
+                    System.out.print("Enter the Item's UPC:\n> ");
+                    upcToReserve = stringScanner.next();
+                    upcToReserve = InputValidation.validateNumericId(upcToReserve, 7);
+                    Reservation itemReservation = ReservationCollection.createReservation(upcToReserve, userIdLoggedIn, "ITEM");
+
+                    if (itemReservation == null)
+                    {
+                        System.out.println("No items with that UPC are available.");
+                    } else
+                    {
+                        System.out.println("Created a new item reservation...\n" + itemReservation);
+                    }
                     break;
-                
+
                 case "2": //to reserve Activity Room
                     Reservation roomReservation = ReservationCollection.createReservation("Room#", userIdLoggedIn, "ROOM");
                     if (roomReservation == null)
@@ -113,17 +120,17 @@ class UserRMI//User Reservation Management Interface
                         System.out.println("Your room reservation is...\n" + roomReservation);
                     }
                     break;
-                
+
                 case "3": //viewReservations
                     viewReservationsUser();
                     break;
-                
+
                 case "4": //back to manage reservations menu
                     break;
             }
         }
     }
-    
+
     /**
      * Displays the cancel reservations menu to a user member.
      * Allows the user to remove data from the database of reservations.
@@ -133,7 +140,7 @@ class UserRMI//User Reservation Management Interface
     private void cancelReservations() throws SQLException
     {
         Scanner scanner = new Scanner(System.in);
-        
+
         String selection = "0";
         while (!selection.equals("3"))
         {
@@ -144,14 +151,14 @@ class UserRMI//User Reservation Management Interface
                     "\n> ");
             selection = scanner.next();
             selection = InputValidation.validateSelection(selection, 3);
-            
+
             switch (selection)
             {
                 case "1": //enter reservation id for cancellation
                     System.out.print("Reservation ID:\n> ");
                     String reservationIdEntered = scanner.next();
                     reservationIdEntered = InputValidation.validateNumericId(reservationIdEntered, 7);
-                    
+
                     Boolean isCanceled = ReservationCollection.cancelReservation(reservationIdEntered, userIdLoggedIn);
                     if (isCanceled)
                     {
@@ -164,17 +171,17 @@ class UserRMI//User Reservation Management Interface
                                 + "\nNo action taken.");
                     }
                     break;
-                
+
                 case "2": //view your reservations
                     viewReservationsUser();
                     break;
-                
+
                 case "3": // back to manage reservations menu
                     break;
             }
         }
     }
-    
+
     /**
      * Displays the reservations under the logged in users account to the user.
      *

@@ -1,9 +1,9 @@
-package LBMS;
+package LibraryManagementSystem.ReservationManagement;
 
 import java.util.Scanner;
 
 /**
- * Methods used for validating user/staff input from respective RMI.
+ * Methods used for validating user/staff input from respective ReservationManagement.
  */
 public class InputValidation
 {
@@ -18,10 +18,10 @@ public class InputValidation
     {
         Scanner scanner = new Scanner(System.in);
         String stringValidatedId = idNumber;
-        
+
         int validIdCharacters;
         boolean isValidId = false;
-        
+
         while (!isValidId)
         {
             validIdCharacters = 0;
@@ -39,19 +39,19 @@ public class InputValidation
                     }
                 }
             }
-            
+
             if (validIdCharacters != idLength)
             {
                 System.out.print("Enter a " + idLength + "-digit reservation ID\n> ");
                 stringValidatedId = scanner.next();
             }
-            
+
             isValidId = validIdCharacters == idLength;
         }
-        
+
         return stringValidatedId;
     }
-    
+
     /**
      * Takes an id number, validates the id number, and returns a valid id number.
      *
@@ -59,14 +59,14 @@ public class InputValidation
      * @param idLength Length of id number to be validated.
      * @return Validated id number.
      */
-    public static String validateRentableId(String idNumber, Integer idLength)
+    public static String validateRentable(String idNumber, Integer idLength)
     {
         Scanner scanner = new Scanner(System.in);
         String stringValidatedId = idNumber;
-        
+
         int validIdCharacters;
         boolean isValidId = false;
-        
+
         while (!isValidId)
         {
             validIdCharacters = 0;
@@ -87,19 +87,19 @@ public class InputValidation
                     }
                 }
             }
-            
+
             if (validIdCharacters != idLength)
             {
-                System.out.print("Enter a " + idLength + "-digit rentable ID\n> ");
+                System.out.print("Enter a " + idLength + "-digit ID\n> ");
                 stringValidatedId = scanner.next();
             }
-            
+
             isValidId = validIdCharacters == idLength;
         }
-        
+
         return stringValidatedId;
     }
-    
+
     /**
      * Takes a String user/staff id number, validates the id number, and returns a valid id number.
      *
@@ -114,7 +114,7 @@ public class InputValidation
         {
             invalidId = idString.substring(1, 7);
         }
-        
+
         String firstChar = "" + idString.charAt(0);
         if (!firstChar.equals("u") && !firstChar.equals("U") && !firstChar.equals("s") && !firstChar.equals("S"))
         {
@@ -127,13 +127,13 @@ public class InputValidation
             while (!firstChar.equals("u") && !firstChar.equals("U") && !firstChar.equals("s") && !firstChar.equals("S"));
         }
         firstChar = firstChar.toUpperCase();
-        
-        String validId = validateRentableId(invalidId, 6);
+
+        String validId = validateRentable(invalidId, 6);
         System.out.println("Valid user ID entered.");
-        
+
         return "" + firstChar + validId;
     }
-    
+
     /**
      * Takes a user selected number and the bounds that it must be within,
      * then validates the selection based on the provided boundary.
@@ -145,17 +145,17 @@ public class InputValidation
     public static String validateSelection(String userEntered, int totalSelections)
     {
         Scanner scanner = new Scanner(System.in);
-        
-        String validatedUserEntered = validateRentableId(userEntered, 1);
+
+        String validatedUserEntered = validateRentable(userEntered, 1);
         int validatedUserEnteredToInteger = Integer.parseInt(validatedUserEntered);
-        
+
         while (!(validatedUserEnteredToInteger > 0 && validatedUserEnteredToInteger < totalSelections + 1))
         {
             if (!(validatedUserEnteredToInteger > 0 && validatedUserEnteredToInteger < totalSelections + 1))
             {
                 System.out.print("(1-" + totalSelections + ")\n>");
                 validatedUserEntered = scanner.next();
-                validatedUserEntered = validateRentableId(validatedUserEntered, 1);
+                validatedUserEntered = validateRentable(validatedUserEntered, 1);
                 validatedUserEnteredToInteger = Integer.parseInt(validatedUserEntered);
             }
         }

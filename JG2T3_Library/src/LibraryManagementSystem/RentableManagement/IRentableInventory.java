@@ -1,4 +1,4 @@
-package LBMS;
+package LibraryManagementSystem.RentableManagement;
 import java.util.ArrayList;
 import java.sql.*;
 
@@ -10,23 +10,14 @@ public interface IRentableInventory {
 	 * @param r the Rentable to be added to the inventory
 	 * @return returns true if Rentable was successfully added
 	 */
-	public boolean addRentable(Rentable r);
-		
-	
-	/**
-	 * Checks if a book or DVD is available
-	 * @param identifier the unique attribute that determines the title or room number of the Rentable
-	 * @param type The type of Rentable being checked (DVD or Book)
-	 * @return Returns true if there are more copies of the book than there are Rentals for the book
-	 */
-	public boolean isAvailable(String identifier, String type);
+	public String addRentable(Rentable r);
 	
 	/**
 	 * Deletes a Rentable with a specific SKU from the database
 	 * @param rentableSKU The SKU of the Rentable that needs to be removed
 	 * @return returns the removed Rentable
 	 */
-	public Rentable removeRentable(int rentableSKU);
+	public Rentable removeRentable(String rentableSKU);
 	
 	/**
 	 * Searches the database for a list of Rentables
@@ -34,11 +25,11 @@ public interface IRentableInventory {
 	 * @param searchParameter The parameter that is being compared to the Rentables in the database to determine what will be returned
 	 * @return True if the search is successful and the desired Rentables are printed out
 	 */
-	public boolean searchRentables(String searchType, String searchParameter);
+	public ArrayList<String> searchRentables(String searchType, String searchParameter);
 
 	/**
 	 * Displays all Rentables in the database
 	 * @return True if all Rentables are successfully printed out
 	 */
-	public boolean viewRentables();
+	public ArrayList<String> viewRentables();
 }

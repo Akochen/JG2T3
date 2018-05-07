@@ -1,7 +1,8 @@
-package LBMS;
+
+package LibraryManagementSystem.AccountManagement;
 
 /**
- * Contains userâ€™s address including: Street Number, Street Name, City, State,
+ * Contains user’s address including: Street Number, Street Name, City, State,
  * and Zip Code
  * 
  * @author Kwesi Quallis
