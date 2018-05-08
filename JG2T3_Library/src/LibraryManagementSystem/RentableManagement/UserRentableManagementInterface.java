@@ -55,7 +55,7 @@ public class UserRentableManagementInterface {
         }
         String parameter = "";
         System.out.print("Please input what you would like to search for. \nSearch: ");
-        parameter = scanner.next();
+        parameter = scanner.nextLine();
         
         System.out.println("Results:\n" + inventory.searchRentables(type, parameter));
     }
