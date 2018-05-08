@@ -16,7 +16,7 @@ public class UserRentableManagementInterface {
                 + "1) Yes\n"
                 + "2) No");
         Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
+        int choice = Integer.parseInt(scanner.nextLine());
         
         if(choice == 1) {
             searchRentableUI();
@@ -31,25 +31,22 @@ public class UserRentableManagementInterface {
         RentableInventory inventory = new RentableInventory();
         
         System.out.println("\nPlease select an attribute to search by:\n"
-                + "1) SKU\n"
-                + "2) Title\n"
-                + "3) ISBN\n"
-                + "4) Condition\n"
-                + "5) Genre\n"
-                + "6) Type\n");
-        int choice = scanner.nextInt();
+                + "1) Title\n"
+                + "2) ISBN\n"
+                + "3) Condition\n"
+                + "4) Genre\n"
+                + "5) Type\n");
+        int choice = Integer.parseInt(scanner.nextLine());
         String type = "";
         if(choice == 1) {
-            type = "sku";
-        } else if(choice == 2) {
             type = "title";
-        }else if(choice == 3) {
+        }else if(choice == 2) {
             type = "isbn";
-        }else if(choice == 4) {
+        }else if(choice == 3) {
             type = "condition";
-        }else if(choice ==5) {
+        }else if(choice ==4) {
             type = "genre";
-        }else if(choice ==6) {
+        }else if(choice ==5) {
             type = "type";
         } else {
             System.out.println("Invalid input. Please try again.");
@@ -60,10 +57,7 @@ public class UserRentableManagementInterface {
         System.out.print("Please input what you would like to search for. \nSearch: ");
         parameter = scanner.next();
         
-        if(!type.equals("")) {
-            System.out.println("Results:");
-            inventory.searchRentables(type, parameter);
-        }
+        System.out.println("Results:\n" + inventory.searchRentables(type, parameter));
     }
 
 }

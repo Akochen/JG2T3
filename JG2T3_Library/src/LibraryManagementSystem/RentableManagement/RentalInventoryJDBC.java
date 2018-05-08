@@ -1,11 +1,13 @@
 package LibraryManagementSystem.RentableManagement;
 
 import java.sql.*;
+import java.util.ArrayList;
+
 
 public class RentalInventoryJDBC implements IRentalInventory {
 	private final String URL = "jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true";
 	private final String uName = "root";
-	private final String uPass = "root";
+	//private final String uPass = "root";
 
 	public RentalInventoryJDBC() {
 		try {
@@ -22,45 +24,49 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 * @return returns true if the Rentable is successfully checked in
 	 */
 	@Override
-	public boolean checkIn(int sku) {
-		String sql = "";
-		boolean result = false;
-		sql = "DELETE * FROM Rental WHERE Rental.upc = " + sku ";";
+	public ArrayList<String> checkIn(int rentableId) {
+		String sql1 = "";
+		String sql2 = "";
+		String test = "";
+		ArrayList<String> reservedBy = new ArrayList<String>();
+		sql1 = "SELECT * FROM Rentable WHERE Rentable.rentableId = '" + rentableId + "';";
+		//test = "SELECT userId FROM Reservation WHERE Reservation.upc = '" + 
+		sql2 = "DELETE FROM Rental WHERE Rental.rentableId = '" + rentableId + "';";
+		Connection conn = null;
 		Statement statement = null;
-		
-		try {
-			statement.executeUpdate(sql);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
+		ResultSet resultSet = null;
+		ResultSet testresultSet = null;
+
 		try { //include reservation for this to work!!!!!
-			conn = DriverManager.getConnection(URL, uName, uPass);
-			statement.executeUpdate(sql);
-			/*if( Reservation.getRentableId() = sku ) {
-				System.out.println("Reservation for Returned Rentable: " + Reservation.getReservationId() + " "
-					+ Reservation.getRentableId() + " "
-					+ Reservation.getUserId() + " "
-					+ Reservation.getReservationDate() + " "
-					+ Reservation.getReservationExpireDate() + " "
-					+ Reservation.getActive() + " "
-					+ Reservation.getReservationType() );
-			} else {
-					return null;
+			conn = DriverManager.getConnection(URL, uName, "");
+			statement = conn.createStatement();
+			resultSet = statement.executeQuery(sql1);
+			
+			
+			if (!resultSet.first()){
+				reservedBy.add("No Reservtions Found");
+				return reservedBy; //This is what needed to be done
+			}
+			String upcToEnter = resultSet.getString("upc");
+			System.out.println(upcToEnter);
+			test = "SELECT userId FROM Reservation WHERE Reservation.upc = '" + upcToEnter + "';";
+			testresultSet = statement.executeQuery(test);
+			/*if ( ReservationCollectionJDBC.searchByUpc( upcToEnter ) ){
+				reservedBy.add( resultSet.getString("userId") );
 			}
 			*/
-		}catch (SQLException e1) {
+			if (!testresultSet.first()){
+				reservedBy.add("No Reservtions Found");
+				return reservedBy; //This is what needed to be done
+			}
+				reservedBy.add( testresultSet.getString("userId") );
+		}catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		try {
+			statement.executeUpdate(sql2);
+		} catch (SQLException e1) {
 			e1.printStackTrace();
 		} finally {
 			try {
@@ -74,8 +80,8 @@ public class RentalInventoryJDBC implements IRentalInventory {
 				e.printStackTrace();
 			}
 		}
-		
-		return true;
+		return reservedBy;
+
 	}
 
 	/**
@@ -105,12 +111,13 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 * Used for filtering Rentals based on a specific input parameter
 	 * @param searchType The attribute being used to filter results
 	 * @param searchParameters The parameter being compared to the rentals in the database to determine what will be returned
-	 * @return True if the search is successful and the desired Rentals are printed out
+	 * @return an ArrayList of Rentals meeting the search criteria. 
 	 */
 	@Override
-	public boolean searchRentals(String searchType, String searchParameters) {
-		boolean result = false;
-		String sql = "SELECT * FROM rental, rentable WHERE rental.rentableID = rentable.rentableID AND rentable.type = ? AND rentable.title LIKE ?;";
+	public ArrayList<Rental> searchRentals(String searchType, String searchParameters) {
+		ArrayList<Rental> resList = new ArrayList<>();
+		String sql = "SELECT * FROM rental, rentable WHERE rental.sku = rentable.sku AND rentable.type = ? AND rentable.title LIKE ?;";
+
 		ResultSet resultSet;
 		try (
 			Connection conn = JDBCConfig.getConnection();
@@ -120,16 +127,18 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			statement.setString(2, searchParameters);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				String toPrint = "SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
-				+ ", End Date: " + resultSet.getString(3) + ", User Id: " + resultSet.getString(4)
-				+ ", Times Renewed: " + resultSet.getString(5);
-				System.out.println(toPrint);
+				Rental rowObj = new Rental(
+						resultSet.getInt(1), 
+						resultSet.getDate(2), 
+						resultSet.getDate(3),
+						resultSet.getInt(4),
+						resultSet.getInt(5));
+				resList.add(rowObj);
 			}
-			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return result;
+		return resList;
 
 	}
 
@@ -139,22 +148,29 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 * @return Returns an ArrayList of all existing Rentals
 	 */
 	@Override
-	public String viewRentals() {
+	public ArrayList<String> viewRentals() {
 		String sql = "";
-		String result = "";
+		ArrayList<String> result = new ArrayList<String>();
 		sql = "SELECT * FROM Rental;";
 		Connection conn = null;
 		Statement statement = null;
 		ResultSet resultSet;
 		try {
-			conn = DriverManager.getConnection(URL, uName, uPass);
+			conn = DriverManager.getConnection(URL, uName, "");
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				result = "SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
-						+ ", End Date: " + resultSet.getString(3) + ", User Id: " + resultSet.getString(4)
-						+ ", Times Renewed: " + resultSet.getString(5);
+			
+			if (!resultSet.first()){
+				result.add("No Rentals Found");
 			}
+			do
+				result.add("Rentable ID: " + resultSet.getString(1) 
+				+ ", Start Date: " + resultSet.getString(2)
+				+ ", End Date: " + resultSet.getString(3) 
+				+ ", User Id: " + resultSet.getString(4)
+				+ ", Times Renewed: " + resultSet.getString(5) + "\n");
+			while (resultSet.next());
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

@@ -31,7 +31,9 @@ public class Rentable {
 		this.title = title;
 		this.condition = condition;
 		this.genre = genre;
+		this.availability = availability;
 		type = "DVD";
+		isbn = "";
 	}
 
 	/**
@@ -60,6 +62,7 @@ public class Rentable {
 		this.condition = condition;
 		this.genre = genre;
 		this.type = type;
+		this.availability = availability;
 	}
 
 	/**
@@ -133,10 +136,10 @@ public class Rentable {
 	 */
 	public String toString() {
 		if (type.toLowerCase().equals("book")) {
-			return "SKU: " + sku + ", UPC: " + upc + ", Title: " + title + ", ISBN: " + isbn + ", Genre: " + genre
+			return "ID: " + sku + ", UPC: " + upc + ", Title: " + title + ", ISBN: " + isbn + ", Genre: " + genre
 					+ ", Type: " + type;
 		} else if(type.toLowerCase().equals("dvd")) {
-			return "SKU: " + sku + ", UPC: " + upc + ", Title: " + title + ", Genre: " + genre + ", Type: " + type;
+			return "ID: " + sku + ", UPC: " + upc + ", Title: " + title + ", Genre: " + genre + ", Type: " + type;
 		}else {
 			return "";
 		}

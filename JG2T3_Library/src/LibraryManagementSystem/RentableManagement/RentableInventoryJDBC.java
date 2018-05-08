@@ -39,7 +39,7 @@ public class RentableInventoryJDBC implements IRentableInventory {
 		
 		if (r.getType().toLowerCase().equals("dvd")) {
 			query = "INSERT INTO Rentable VALUES('" + r.getSku() + "', '" + r.getUpc() + "', '" + r.getTitle() + "', "
-					+ "null" + ", '" + r.getCondition() + "', '" + r.getGenre() + "', '" + r.getType() + "', " + r.getAvailability()+ ");";
+					+ "''" + ", '" + r.getCondition() + "', '" + r.getGenre() + "', '" + r.getType() + "', " + r.getAvailability()+ ");";
 		} else if (r.getType().toLowerCase().equals("book") || r.getType().toLowerCase().equals("ebook")) {
 			query = "INSERT INTO Rentable VALUES('" + r.getSku() + "', '" + r.getUpc() + "', '" + r.getTitle() + "', '"
 					+ r.getIsbn() + "', '" + r.getCondition() + "', '" + r.getGenre() + "', '" + r.getType() + "', " + r.getAvailability() + ");";
@@ -50,7 +50,7 @@ public class RentableInventoryJDBC implements IRentableInventory {
 			statement = conn.createStatement();
 			statement.execute(query);
 		} catch (SQLException e1) {
-			endMsg = "Error: SKU already exists.";
+			endMsg = "Error: ID already exists.";
 		} finally {
 			try {
 				statement.close();
@@ -90,10 +90,10 @@ public class RentableInventoryJDBC implements IRentableInventory {
 						|| resultSet.getString(7).toLowerCase().equals("ebook")) {
 					rentable = new Rentable(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
 							resultSet.getString(4), resultSet.getString(5), resultSet.getString(6),
-							resultSet.getString(7));
+							resultSet.getString(7), resultSet.getInt(8)+"");
 				} else if (resultSet.getString(7).toLowerCase().equals("dvd")) {
 					rentable = new Rentable(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
-							resultSet.getString(4), resultSet.getString(6));
+							resultSet.getString(4), resultSet.getString(6), resultSet.getInt(8)+"");
 				}
 			} else {
 				return null;
@@ -139,11 +139,11 @@ public class RentableInventoryJDBC implements IRentableInventory {
 	 *         printed out
 	 */
 	@Override
-	public boolean searchRentables(String searchType, String searchParameter) {
+	public ArrayList<String> searchRentables(String searchType, String searchParameter) {
 		String sql = "";
-		boolean result = false;
+		ArrayList<String> result = new ArrayList<String>();
 		sql = "SELECT * FROM Rentable WHERE rentable." + searchType + " = '" + searchParameter + "';";
-
+		//sql = "SELECT * FROM Rentable WHERE rentable." + searchType + " = 'Best Book NA';";
 		Statement statement = null;
 		ResultSet resultSet;
 		try {
@@ -151,25 +151,20 @@ public class RentableInventoryJDBC implements IRentableInventory {
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql);
 
-			if (!resultSet.next())
-				System.out.println("No Results Found");
-			while (resultSet.next()) {
-				String type = resultSet.getString(6);
-
-				if (type.toLowerCase().equals("book") || type.toLowerCase().equals("ebook")) {
-					System.out.println("SKU: " + resultSet.getString(1) + ", Title: " + resultSet.getString(2)
-							+ ", ISBN: " + resultSet.getString(3) + ", Condition: " + resultSet.getString(4)
-							+ ", Genre: " + resultSet.getString(5) + ", Type: " + resultSet.getString(6));
-				} else if (type.toLowerCase().equals("dvd")) {
-					System.out.println("SKU: " + resultSet.getString(1) + ", Title: " + resultSet.getString(2)
-							+ ", Condition: " + resultSet.getString(4) + ", Genre: " + resultSet.getString(5)
-							+ ", Type: " + resultSet.getString(6));
-				} else if (type.toLowerCase().equals("room")) {
-					System.out.println("SKU: " + resultSet.getString(1) + ", Room Number: " + resultSet.getString(7));
-				}
-
+			if (!resultSet.next()) {
+				result.add("No Results Found");
+				return result;
 			}
-			return true;
+			do
+				result.add("Rentable ID: " + resultSet.getString(1)
+				+", UPC: " + resultSet.getString(2)
+				+", Title: " + resultSet.getString(3)
+				+", ISBN: " + resultSet.getString(4)
+				+", Condition: " + resultSet.getString(5)
+				+", Genre: " + resultSet.getString(6)
+				+", Type: " + resultSet.getString(7)
+				+", Availability: " + resultSet.getInt(8) + "\n");	
+			while (resultSet.next());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -193,9 +188,9 @@ public class RentableInventoryJDBC implements IRentableInventory {
 	 * @return The arraylist of all Rentables in the database
 	 */
 	@Override
-	public boolean viewRentables() {
+	public ArrayList<String> viewRentables() {
 		String sql = "";
-		boolean result = false;
+		ArrayList<String> result = new ArrayList<String>();
 		sql = "SELECT * FROM Rentable;";
 
 		Statement statement = null;
@@ -206,25 +201,20 @@ public class RentableInventoryJDBC implements IRentableInventory {
 			resultSet = statement.executeQuery(sql);
 
 			if (!resultSet.first()) {
-				System.out.println("No Results Found");
+				result.add("No Results Found");
+				return result;
 			}
-			resultSet.beforeFirst();
-			while (resultSet.next()) {
-				String type = resultSet.getString(7);
-
-				if (type.toLowerCase().equals("book") || type.toLowerCase().equals("ebook")) {
-					System.out.println("SKU: " + resultSet.getString(1) + ", Title: " + resultSet.getString(2)
-							+ ", ISBN: " + resultSet.getString(3) + ", Condition: " + resultSet.getString(4)
-							+ ", Genre: " + resultSet.getString(5) + ", Type: " + resultSet.getString(6));
-				} else if (type.toLowerCase().equals("dvd")) {
-					System.out.println("SKU: " + resultSet.getString(1) + ", Title: " + resultSet.getString(2)
-							+ ", Condition: " + resultSet.getString(4) + ", Genre: " + resultSet.getString(5)
-							+ ", Type: " + resultSet.getString(6));
-				} else {
-					System.out.println("Invalid Type");
-				}
-			}
-			return true;
+			do
+				result.add("Rentable Id: " + resultSet.getString(1) 
+				+ ", Upc: " + resultSet.getString(2) 
+				+ ", Title: " + resultSet.getString(3) 
+				+ ", ISBN: " + resultSet.getString(4) 
+				+ ", Condition: " + resultSet.getString(5) 
+				+ ", Genre: " + resultSet.getString(6) 
+				+ ", Type: " + resultSet.getString(7) 
+				+ ", Availability: " + resultSet.getString(8) + "\n");
+			while (resultSet.next());
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

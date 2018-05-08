@@ -63,7 +63,7 @@ public class StaffRentableManagementInterface {
 		switch (type) {
 		case 1:
 			// Asks for input information about Rentable
-			System.out.print("Please input the SKU: ");
+			System.out.print("Please input the ID: ");
 			sku = scanner.nextLine();
 			System.out.print("Please input the UPC: ");
 			upc = scanner.nextLine();
@@ -87,7 +87,7 @@ public class StaffRentableManagementInterface {
 			break;
 		case 2:
 			// Asks for input information about Rentable
-			System.out.print("Please input the SKU: ");
+			System.out.print("Please input the ID: ");
 			sku = scanner.nextLine();
 			System.out.print("Please input the UPC: ");
 			upc = scanner.nextLine();
@@ -108,7 +108,7 @@ public class StaffRentableManagementInterface {
 			break;
 		case 3:
 			// Asks for input information about Rentable
-			System.out.print("Please input the SKU: ");
+			System.out.print("Please input the ID: ");
 			sku = scanner.nextLine();
 			System.out.print("Please input the UPC: ");
 			upc = scanner.nextLine();
@@ -139,52 +139,49 @@ public class StaffRentableManagementInterface {
 
 	public static void viewRentableUI() throws SQLException {
 		RentableInventory inventory = new RentableInventory();
-		System.out.println("All rentables:");
-		inventory.viewRentables();
+		System.out.println("All rentables:\n" + inventory.viewRentables());
 	}
 
 	public static void searchRentableUI() throws SQLException {
 		Scanner scanner = new Scanner(System.in);
 		RentableInventory inventory = new RentableInventory();
 
-		System.out.println("Please select an attribute to search by:\n" + "1) SKU\n" + "2) Title\n" + "3) ISBN\n"
-				+ "4) Condition\n" + "5) Genre\n" + "6) Type\n" + "");
-		int choice = scanner.nextInt();
+		System.out.println("Please select an attribute to search by:\n" + "1) Rentable ID\n" + "2) UPC\n" + "3) Title\n" + "4) ISBN\n"
+				+ "5) Condition\n" + "6) Genre\n" + "7) Type\n" + "");
+		int choice = Integer.parseInt(scanner.nextLine());
 		String type = "";
 		if (choice == 1) {
-			type = "sku";
+			type = "rentableId";
 		} else if (choice == 2) {
-			type = "title";
+			type = "upc";
 		} else if (choice == 3) {
-			type = "isbn";
+			type = "title";
 		} else if (choice == 4) {
-			type = "condition";
+			type = "isbn";
 		} else if (choice == 5) {
-			type = "genre";
+			type = "condition";
 		} else if (choice == 6) {
+			type = "genre";
+		} else if (choice == 7){
 			type = "type";
-		} else {
+		}else{
 			System.out.println("Invalid input. Please try again.");
 			searchRentableUI();
 			return;
 		}
 		String parameter = "";
 		System.out.print("Please input what you would like to search for. \nSearch: ");
-		parameter = scanner.next();
-		// scanner.close();
-
-		if (!type.equals("")) {
-			System.out.println("Results:");
-			inventory.searchRentables(type, parameter);
-		}
+		parameter = scanner.nextLine();
+		
+		System.out.println("Results:" + inventory.searchRentables(type, parameter));
 	}
 
 	public static void removeRentableUI() {
 		RentableInventory inventory = new RentableInventory();
-		System.out.print("Please enter the SKU of the rental you wish to remove: ");
+		System.out.print("Please enter the ID of the rental you wish to remove: ");
 		Scanner scanner = new Scanner(System.in);
 		String sku = scanner.nextLine();
-		System.out.println("Are you sure you would like to remove the rentable with a sku of " + sku
+		System.out.println("Are you sure you would like to remove the rentable with an ID of " + sku
 				+ "? This cannot be undone!" + "\n1) Yes" + "\n2) No");
 		int choice;
 		try {
