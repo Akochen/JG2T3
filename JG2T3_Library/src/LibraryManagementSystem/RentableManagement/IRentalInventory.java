@@ -38,6 +38,6 @@ public interface IRentalInventory {
 	 * Used for displaying all existing rentals
 	 * @return True if all Rentals are successfully printed out
 	 */
-	public boolean viewRentals();
+	public String viewRentals();
 	
 }

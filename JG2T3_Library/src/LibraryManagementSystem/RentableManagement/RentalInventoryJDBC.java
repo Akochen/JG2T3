@@ -23,8 +23,59 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 */
 	@Override
 	public boolean checkIn(int sku) {
-		// TODO Auto-generated method stub
-		return false;
+		String sql = "";
+		boolean result = false;
+		sql = "DELETE * FROM Rental WHERE Rental.upc = " + sku ";";
+		Statement statement = null;
+		
+		try {
+			statement.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try { //include reservation for this to work!!!!!
+			conn = DriverManager.getConnection(URL, uName, uPass);
+			statement.executeUpdate(sql);
+			/*if( Reservation.getRentableId() = sku ) {
+				System.out.println("Reservation for Returned Rentable: " + Reservation.getReservationId() + " "
+					+ Reservation.getRentableId() + " "
+					+ Reservation.getUserId() + " "
+					+ Reservation.getReservationDate() + " "
+					+ Reservation.getReservationExpireDate() + " "
+					+ Reservation.getActive() + " "
+					+ Reservation.getReservationType() );
+			} else {
+					return null;
+			}
+			*/
+		}catch (SQLException e1) {
+			e1.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return true;
 	}
 
 	/**
@@ -88,9 +139,9 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 * @return Returns an ArrayList of all existing Rentals
 	 */
 	@Override
-	public boolean viewRentals() {
+	public String viewRentals() {
 		String sql = "";
-		boolean result = false;
+		String result = "";
 		sql = "SELECT * FROM Rental;";
 		Connection conn = null;
 		Statement statement = null;
@@ -100,11 +151,10 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				System.out.println("SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
+				result = "SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
 						+ ", End Date: " + resultSet.getString(3) + ", User Id: " + resultSet.getString(4)
-						+ ", Times Renewed: " + resultSet.getString(5));
+						+ ", Times Renewed: " + resultSet.getString(5);
 			}
-			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

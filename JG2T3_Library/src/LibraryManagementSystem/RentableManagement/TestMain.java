@@ -12,6 +12,7 @@ public class TestMain {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println("Please select an operation: \n"
+				+ "4) View all rentals\n"
 				+ "3) View all rentables\n"
 				+ "2) Search Rentables\n"
 				+ "1) Add a new rentable");
@@ -154,13 +155,15 @@ public class TestMain {
 	public static void viewRentableUI(){
 		
 		RentableInventory inventory = new RentableInventory();
-		inventory.viewRentables();
+		System.out.print(inventory.viewRentables());
 	}
 	
 	public static void viewRentalUI(){
 		
 		RentalInventory inventory = new RentalInventory();
 		inventory.viewRentals();
+		
+		
 	}
 	
 	public static void searchRentalUI() {

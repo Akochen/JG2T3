@@ -59,7 +59,7 @@ public class RentalInventory implements IRentalInventory {
 	 * @return Returns an ArrayList of all existing Rentals
 	 */
 	@Override
-	public boolean viewRentals() {
+	public String viewRentals() {
 		return inventory.viewRentals();
 	}
 
