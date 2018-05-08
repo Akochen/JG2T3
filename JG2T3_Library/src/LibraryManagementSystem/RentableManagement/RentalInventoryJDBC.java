@@ -50,7 +50,6 @@ public class RentalInventoryJDBC implements IRentalInventory {
 				return reservedBy; 
 			}
 			String upcToEnter = resultSet.getString("upc");
-			System.out.println(upcToEnter);
 			test = "SELECT userId FROM Reservation WHERE Reservation.upc = '" + upcToEnter + "';";
 			testresultSet = statement.executeQuery(test);
 			/*if ( ReservationCollectionJDBC.searchByUpc( upcToEnter ) ){
@@ -59,11 +58,11 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			*/
 			if (!testresultSet.first()){
 				reservedBy.add("No Reservtions Found");
-				return reservedBy; 
+			} else {
+				do
+					reservedBy.add("Item is reserved by: " + testresultSet.getString("userId") + "\n" );
+				while ( testresultSet.next());
 			}
-			do
-				reservedBy.add("Item is reserved by: " + testresultSet.getString("userId") + "\n" );
-			while ( testresultSet.next());
 		}catch (SQLException e) {
 			e.printStackTrace();
 		} 
