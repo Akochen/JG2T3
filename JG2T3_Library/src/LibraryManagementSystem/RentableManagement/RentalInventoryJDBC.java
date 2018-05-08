@@ -28,14 +28,16 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		String sql1 = "";
 		String sql2 = "";
 		String test = "";
+		String sql3 = "";
 		ArrayList<String> reservedBy = new ArrayList<String>();
 		sql1 = "SELECT * FROM Rentable WHERE Rentable.rentableId = '" + rentableId + "';";
-		//test = "SELECT userId FROM Reservation WHERE Reservation.upc = '" + 
 		sql2 = "DELETE FROM Rental WHERE Rental.rentableId = '" + rentableId + "';";
+		sql3 = "SELECT * FROM Rental WHERE Rental.rentableId = '" + rentableId + "';";
 		Connection conn = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		ResultSet testresultSet = null;
+		ResultSet resultSet3 = null;
 
 		try { //include reservation for this to work!!!!!
 			conn = DriverManager.getConnection(URL, uName, "");
@@ -45,7 +47,7 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			
 			if (!resultSet.first()){
 				reservedBy.add("No Reservtions Found");
-				return reservedBy; //This is what needed to be done
+				return reservedBy; 
 			}
 			String upcToEnter = resultSet.getString("upc");
 			System.out.println(upcToEnter);
@@ -57,14 +59,23 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			*/
 			if (!testresultSet.first()){
 				reservedBy.add("No Reservtions Found");
-				return reservedBy; //This is what needed to be done
+				return reservedBy; 
 			}
-				reservedBy.add( testresultSet.getString("userId") );
+			do
+				reservedBy.add("Item is reserved by: " + testresultSet.getString("userId") + "\n" );
+			while ( testresultSet.next());
 		}catch (SQLException e) {
 			e.printStackTrace();
 		} 
 		
 		try {
+			resultSet3 = statement.executeQuery(sql3);
+			if (!resultSet3.first()){
+				reservedBy.add("No Rentals Found");
+				return reservedBy; 
+			}else 
+				reservedBy.add("Rentable was Checked In.");
+			
 			statement.executeUpdate(sql2);
 		} catch (SQLException e1) {
 			e1.printStackTrace();

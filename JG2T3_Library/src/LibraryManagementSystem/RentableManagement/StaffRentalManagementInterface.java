@@ -20,7 +20,8 @@ public class StaffRentalManagementInterface {
         System.out.println("Please select an operation: \n"
                 + "1) View all rentals\n"
                 + "2) Search rentals\n"
-                + "3) Exit Rental Management");
+                + "3) Check In\n"
+                + "4) Exit Rental Management");
         method = Integer.parseInt(scanner.nextLine());
         
         //scanner.close();
@@ -33,7 +34,10 @@ public class StaffRentalManagementInterface {
                 searchRentalUI();
                 openStaffInterface();
                 break;
-            case 3: break;
+			case 3:
+				checkInUI();
+				break;               
+            case 4: break;
         }
 	}
 	
@@ -75,4 +79,13 @@ public class StaffRentalManagementInterface {
         System.out.println(inventory.viewRentals());
     }
 
+	public static void checkInUI() {
+		Scanner scanner = new Scanner(System.in);
+		RentalInventory inventory = new RentalInventory();
+		
+		System.out.println("Please input the ID for the item you wish to check in:");
+		int id = scanner.nextInt();
+		System.out.println(inventory.checkIn(id));
+
+	}
 }

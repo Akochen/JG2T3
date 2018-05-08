@@ -203,7 +203,7 @@ public class TestMain {
 		
 		System.out.println("Please input the ID for the item you wish to check in:");
 		int id = scanner.nextInt();
-		System.out.println("Item is reserved by: " + inventory.checkIn(id));
+		System.out.println(inventory.checkIn(id));
 
 	}
 }
