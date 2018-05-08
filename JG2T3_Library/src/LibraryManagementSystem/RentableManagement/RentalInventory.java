@@ -49,7 +49,7 @@ public class RentalInventory implements IRentalInventory {
 	 * @return True if the search is successful and the desired Rentals are printed out
 	 */
 	@Override
-	public boolean searchRentals(String searchType, String searchParameters) {
+	public ArrayList<Rental> searchRentals(String searchType, String searchParameters) {
 		return inventory.searchRentals(searchType, searchParameters);
 	}
 	
