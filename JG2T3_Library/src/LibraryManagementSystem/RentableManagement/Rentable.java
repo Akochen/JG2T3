@@ -33,6 +33,7 @@ public class Rentable {
 		this.genre = genre;
 		this.availability = availability;
 		type = "DVD";
+		isbn = "";
 	}
 
 	/**

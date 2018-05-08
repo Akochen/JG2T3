@@ -39,7 +39,7 @@ public class RentableInventoryJDBC implements IRentableInventory {
 		
 		if (r.getType().toLowerCase().equals("dvd")) {
 			query = "INSERT INTO Rentable VALUES('" + r.getSku() + "', '" + r.getUpc() + "', '" + r.getTitle() + "', "
-					+ "null" + ", '" + r.getCondition() + "', '" + r.getGenre() + "', '" + r.getType() + "', " + r.getAvailability()+ ");";
+					+ "''" + ", '" + r.getCondition() + "', '" + r.getGenre() + "', '" + r.getType() + "', " + r.getAvailability()+ ");";
 		} else if (r.getType().toLowerCase().equals("book") || r.getType().toLowerCase().equals("ebook")) {
 			query = "INSERT INTO Rentable VALUES('" + r.getSku() + "', '" + r.getUpc() + "', '" + r.getTitle() + "', '"
 					+ r.getIsbn() + "', '" + r.getCondition() + "', '" + r.getGenre() + "', '" + r.getType() + "', " + r.getAvailability() + ");";
