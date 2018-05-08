@@ -31,6 +31,7 @@ public class Rentable {
 		this.title = title;
 		this.condition = condition;
 		this.genre = genre;
+		this.availability = availability;
 		type = "DVD";
 	}
 
@@ -60,6 +61,7 @@ public class Rentable {
 		this.condition = condition;
 		this.genre = genre;
 		this.type = type;
+		this.availability = availability;
 	}
 
 	/**

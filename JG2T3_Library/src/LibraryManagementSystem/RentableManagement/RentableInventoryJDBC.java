@@ -90,10 +90,10 @@ public class RentableInventoryJDBC implements IRentableInventory {
 						|| resultSet.getString(7).toLowerCase().equals("ebook")) {
 					rentable = new Rentable(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
 							resultSet.getString(4), resultSet.getString(5), resultSet.getString(6),
-							resultSet.getString(7));
+							resultSet.getString(7), resultSet.getInt(8)+"");
 				} else if (resultSet.getString(7).toLowerCase().equals("dvd")) {
 					rentable = new Rentable(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
-							resultSet.getString(4), resultSet.getString(6));
+							resultSet.getString(4), resultSet.getString(6), resultSet.getInt(8)+"");
 				}
 			} else {
 				return null;

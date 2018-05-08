@@ -36,14 +36,16 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		ResultSet resultSet = null;
 
 		try { //include reservation for this to work!!!!!
-			conn = DriverManager.getConnection(URL, uName, "");
+			conn = DriverManager.getConnection(URL, uName, "root");
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql1);
 			
 			if (!resultSet.first()){
 				reservedBy.add("No Reservtions Found");
+				return reservedBy; //This is what needed to be done
 			}
 			String upcToEnter = resultSet.getString("upc");
+			System.out.println(upcToEnter);
 			if ( ReservationCollectionJDBC.searchByUpc( upcToEnter ) ){
 				reservedBy.add( resultSet.getString("userId") );
 			}
