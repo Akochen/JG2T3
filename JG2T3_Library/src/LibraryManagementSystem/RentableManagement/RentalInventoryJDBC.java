@@ -9,7 +9,7 @@ import LibraryManagementSystem.ReservationManagement.ReservationCollectionJDBC;
 public class RentalInventoryJDBC implements IRentalInventory {
 	private final String URL = "jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true";
 	private final String uName = "root";
-	private final String uPass = "root";
+	//private final String uPass = "root";
 
 	public RentalInventoryJDBC() {
 		try {
@@ -29,17 +29,21 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	public ArrayList<String> checkIn(int rentableId) {
 		String sql1 = "";
 		String sql2 = "";
+		String test = "";
 		ArrayList<String> reservedBy = new ArrayList<String>();
 		sql1 = "SELECT * FROM Rentable WHERE Rentable.rentableId = '" + rentableId + "';";
+		//test = "SELECT userId FROM Reservation WHERE Reservation.upc = '" + 
 		sql2 = "DELETE FROM Rental WHERE Rental.rentableId = '" + rentableId + "';";
 		Connection conn = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
+		ResultSet testresultSet = null;
 
 		try { //include reservation for this to work!!!!!
-			conn = DriverManager.getConnection(URL, uName, uPass);
+			conn = DriverManager.getConnection(URL, uName, "");
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql1);
+			
 			
 			if (!resultSet.first()){
 				reservedBy.add("No Reservtions Found");
@@ -47,10 +51,17 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			}
 			String upcToEnter = resultSet.getString("upc");
 			System.out.println(upcToEnter);
-			if ( ReservationCollectionJDBC.searchByUpc( upcToEnter ) ){
+			test = "SELECT userId FROM Reservation WHERE Reservation.upc = '" + upcToEnter + "';";
+			testresultSet = statement.executeQuery(test);
+			/*if ( ReservationCollectionJDBC.searchByUpc( upcToEnter ) ){
 				reservedBy.add( resultSet.getString("userId") );
 			}
-			
+			*/
+			if (!testresultSet.first()){
+				reservedBy.add("No Reservtions Found");
+				return reservedBy; //This is what needed to be done
+			}
+				reservedBy.add( testresultSet.getString("userId") );
 		}catch (SQLException e) {
 			e.printStackTrace();
 		} 
@@ -144,7 +155,7 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		Statement statement = null;
 		ResultSet resultSet;
 		try {
-			conn = DriverManager.getConnection(URL, uName, uPass);
+			conn = DriverManager.getConnection(URL, uName, "");
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql);
 			
