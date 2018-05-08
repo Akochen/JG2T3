@@ -32,7 +32,7 @@ public interface IRentalInventory {
 	 * @param searchParameters The parameter being compared to the rentals in the database to determine what will be returned
 	 * @return True if the search is successful and the desired Rentals are printed out
 	 */
-	public boolean searchRentals(String searchType, String searchParameters);
+	public ArrayList<Rental> searchRentals(String searchType, String searchParameters);
 	
 	/**
 	 * Used for displaying all existing rentals

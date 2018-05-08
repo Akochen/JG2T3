@@ -1,6 +1,7 @@
 package LBMS;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class RentalInventoryJDBC implements IRentalInventory {
 	private final String URL = "jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true";
@@ -54,11 +55,11 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 * Used for filtering Rentals based on a specific input parameter
 	 * @param searchType The attribute being used to filter results
 	 * @param searchParameters The parameter being compared to the rentals in the database to determine what will be returned
-	 * @return True if the search is successful and the desired Rentals are printed out
+	 * @return an ArrayList of Rentals meeting the search criteria. 
 	 */
 	@Override
-	public boolean searchRentals(String searchType, String searchParameters) {
-		boolean result = false;
+	public ArrayList<Rental> searchRentals(String searchType, String searchParameters) {
+		ArrayList<Rental> resList = new ArrayList<>();
 		String sql = "SELECT * FROM rental, rentable WHERE rental.sku = rentable.sku AND rentable.type = ? AND rentable.title LIKE ?;";
 		ResultSet resultSet;
 		try (
@@ -69,16 +70,18 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			statement.setString(2, searchParameters);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				String toPrint = "SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
-				+ ", End Date: " + resultSet.getString(3) + ", User Id: " + resultSet.getString(4)
-				+ ", Times Renewed: " + resultSet.getString(5);
-				System.out.println(toPrint);
+				Rental rowObj = new Rental(
+						resultSet.getInt(1), 
+						resultSet.getDate(2), 
+						resultSet.getDate(3),
+						resultSet.getInt(4),
+						resultSet.getInt(5));
+				resList.add(rowObj);
 			}
-			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return result;
+		return resList;
 
 	}
 
