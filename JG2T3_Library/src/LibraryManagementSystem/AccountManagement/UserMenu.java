@@ -12,7 +12,7 @@ public class UserMenu {
     static final String DRIVER = "com.mysql.jdbc.Driver";
     static final String DATABASE_URL = "jdbc:mysql://localhost/db_library?useSSL=false";
     static final String MYSQL_USERNAME ="root";
-    static final String MYSQL_PASSWORD ="";
+    static final String MYSQL_PASSWORD ="root";
     private static boolean isLoggedIn = false;
 
 
@@ -45,7 +45,7 @@ public class UserMenu {
                     break;
             case 3: System.out.println("Viewing all rentables:");
                     RentableInventory inventory = new RentableInventory();
-                    inventory.viewRentables();
+            		System.out.println("All rentables:\n" + inventory.viewRentables());
                     break;
             default:
                     System.out.println("Invalid option, returning to menu..");

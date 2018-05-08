@@ -11,6 +11,8 @@ public class StaffRentalManagementInterface {
 	}
 
 	private void openStaffInterface() {
+		//Scanner sc = new Scanner(System.in);
+		//sc.close();
 		Scanner scanner = new Scanner(System.in);
         int method = 0;
         
@@ -19,7 +21,8 @@ public class StaffRentalManagementInterface {
                 + "1) View all rentals\n"
                 + "2) Search rentals\n"
                 + "3) Exit Rental Management");
-        method = scanner.nextInt();
+        method = Integer.parseInt(scanner.nextLine());
+        
         //scanner.close();
         switch (method) {
             case 1:
@@ -39,13 +42,13 @@ public class StaffRentalManagementInterface {
         RentalInventory inventory = new RentalInventory();
         
         System.out.println("Please select an attribute to search by:\n"
-                + "1) SKU\n"
+                + "1) Rentable ID\n"
                 + "2) User ID\n"
                 + "3) Times Renewed");
-        int choice = scanner.nextInt();
+        int choice = Integer.parseInt(scanner.nextLine());
         String type = "";
         if(choice == 1) {
-            type = "sku";
+            type = "rentableid";
         } else if(choice == 2) {
             type = "title";
         }else if(choice == 3) {
@@ -67,9 +70,9 @@ public class StaffRentalManagementInterface {
     }
 	
 	public static void viewRentalUI(){
-        System.out.println("All rentables:");
+        System.out.println("All rentals:\n");
         RentalInventory inventory = new RentalInventory();
-        inventory.viewRentals();
+        System.out.println(inventory.viewRentals());
     }
 
 }

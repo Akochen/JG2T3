@@ -9,6 +9,7 @@ import LibraryManagementSystem.ReservationManagement.ReservationCollectionJDBC;
 public class RentalInventoryJDBC implements IRentalInventory {
 	private final String URL = "jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true";
 	private final String uName = "root";
+	private final String uPass = "root";
 
 	public RentalInventoryJDBC() {
 		try {
@@ -36,7 +37,7 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		ResultSet resultSet = null;
 
 		try { //include reservation for this to work!!!!!
-			conn = DriverManager.getConnection(URL, uName, "root");
+			conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql1);
 			
@@ -116,7 +117,7 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			statement.setString(2, searchParameters);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				String toPrint = "SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
+				String toPrint = "ID: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
 				+ ", End Date: " + resultSet.getString(3) + ", User Id: " + resultSet.getString(4)
 				+ ", Times Renewed: " + resultSet.getString(5);
 				System.out.println(toPrint);
@@ -143,7 +144,7 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		Statement statement = null;
 		ResultSet resultSet;
 		try {
-			conn = DriverManager.getConnection(URL, uName, "");
+			conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql);
 			

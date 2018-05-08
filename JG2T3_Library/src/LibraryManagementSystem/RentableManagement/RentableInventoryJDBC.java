@@ -50,7 +50,7 @@ public class RentableInventoryJDBC implements IRentableInventory {
 			statement = conn.createStatement();
 			statement.execute(query);
 		} catch (SQLException e1) {
-			endMsg = "Error: SKU already exists.";
+			endMsg = "Error: ID already exists.";
 		} finally {
 			try {
 				statement.close();
@@ -143,7 +143,7 @@ public class RentableInventoryJDBC implements IRentableInventory {
 		String sql = "";
 		ArrayList<String> result = new ArrayList<String>();
 		sql = "SELECT * FROM Rentable WHERE rentable." + searchType + " = '" + searchParameter + "';";
-
+		//sql = "SELECT * FROM Rentable WHERE rentable." + searchType + " = 'Best Book NA';";
 		Statement statement = null;
 		ResultSet resultSet;
 		try {
@@ -151,8 +151,10 @@ public class RentableInventoryJDBC implements IRentableInventory {
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql);
 
-			if (!resultSet.next())
+			if (!resultSet.next()) {
 				result.add("No Results Found");
+				return result;
+			}
 			do
 				result.add("Rentable ID: " + resultSet.getString(1)
 				+", UPC: " + resultSet.getString(2)
@@ -200,6 +202,7 @@ public class RentableInventoryJDBC implements IRentableInventory {
 
 			if (!resultSet.first()) {
 				result.add("No Results Found");
+				return result;
 			}
 			do
 				result.add("Rentable Id: " + resultSet.getString(1) 
