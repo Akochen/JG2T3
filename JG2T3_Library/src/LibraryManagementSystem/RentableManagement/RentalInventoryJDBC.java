@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class RentalInventoryJDBC implements IRentalInventory {
 	private final String URL = "jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true";
 	private final String uName = "root";
-	//private final String uPass = "root";
+	private final String uPass = "root";
 
 	public RentalInventoryJDBC() {
 		try {
@@ -38,7 +38,7 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		ResultSet testresultSet = null;
 
 		try { //include reservation for this to work!!!!!
-			conn = DriverManager.getConnection(URL, uName, "");
+			conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql1);
 			
@@ -156,7 +156,7 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		Statement statement = null;
 		ResultSet resultSet;
 		try {
-			conn = DriverManager.getConnection(URL, uName, "");
+			conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql);
 			
