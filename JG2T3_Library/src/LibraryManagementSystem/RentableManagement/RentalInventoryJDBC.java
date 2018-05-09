@@ -115,8 +115,23 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 * @return returns true if the rental is successfully renewed
 	 */
 	@Override
-	public boolean renewRental(Rental r) {
-		// TODO Auto-generated method stub
+	public boolean renewRental(String rentableIdToSearch) {
+		String sqlSelect = "SELECT * FROM Rentable WHERE Rentable.rentableId = '" + rentableIdToSearch + "';";
+		Connection conn = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			conn = DriverManager.getConnection(URL, uName, uPass);
+			statement = conn.createStatement();
+			resultSet = statement.executeQuery(sqlSelect);
+			
+			if (!resultSet.first())
+				return false;
+			
+			
+			
+
 		return false;
 	}
 

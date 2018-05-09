@@ -69,7 +69,7 @@ public class UserRentableManagementInterface {
         if(choice2 == 1) {
         	 System.out.println("Please input the UPC of the Rentable you would like to reserve.\n");
         	 String newUpc = scanner.nextLine();
-        	 ReservationCollection.createReservation(newUpc, userID, "ITEM");
+        	 //ReservationCollection.createReservation(newUpc, userID, "ITEM");
         } else {
             return;
         }

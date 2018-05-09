@@ -38,8 +38,8 @@ public class RentalInventory implements IRentalInventory {
 	 * @return returns true if the rental is successfully renewed
 	 */
 	@Override
-	public boolean renewRental(Rental r) {
-		return inventory.renewRental(r);
+	public boolean renewRental(String rentableIdToSearch) {
+		return true;
 	}
 
 	/**

@@ -24,7 +24,7 @@ public interface IRentalInventory {
 	 * @param r The rental to renew
 	 * @return returns true if the rental is successfully renewed
 	 */
-	public boolean renewRental(Rental r);
+	public boolean renewRental(String rentableIdToSearch);
 	
 	/**
 	 * Used for filtering Rentals based on a specific input parameter
