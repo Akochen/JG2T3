@@ -2,9 +2,11 @@ package LibraryManagementSystem.RentableManagement;
 
 import java.sql.SQLException;
 import java.util.Scanner;
+import LibraryManagementSystem.ReservationManagement.*;
+
 
 public class UserRentableManagementInterface {
-	private String userID;
+	private static String userID;
 	
 	public UserRentableManagementInterface(String userID) throws SQLException {
 		this.userID = userID;
@@ -58,6 +60,19 @@ public class UserRentableManagementInterface {
         parameter = scanner.nextLine();
         
         System.out.println("Results:\n" + inventory.searchRentables(type, parameter));
+        
+		System.out.println("\nWould you like to reserve a rentable?\n"
+                + "1) Yes\n"
+                + "2) No");
+        int choice2 = Integer.parseInt(scanner.nextLine());
+        
+        if(choice2 == 1) {
+        	 System.out.println("Please input the UPC of the Rentable you would like to reserve.\n");
+        	 String newUpc = scanner.nextLine();
+        	 ReservationCollection.createReservation(newUpc, userID, "ITEM");
+        } else {
+            return;
+        }
     }
 
 }
