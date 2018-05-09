@@ -127,16 +127,38 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 * @return an ArrayList of Rentals meeting the search criteria. 
 	 */
 	@Override
-	public ArrayList<Rental> searchRentals(String searchType, String searchParameters) {
+	public String searchRentals(String searchType, String searchParameters) {
+		return buildRentalsTable(searchRentalsObj(searchType, searchParameters));
+	}
+	
+	public ArrayList<Rental> searchRentalsObj(String searchType, String searchParameters) {
 		ArrayList<Rental> resList = new ArrayList<>();
-		String sql = "SELECT * FROM rental, rentable WHERE rental.sku = rentable.sku AND rentable.type = ? AND rentable.title LIKE ?;";
+		String matchOn;
+		switch (searchType) {
+		case "rentableid":
+			matchOn = "rentable.";
+		case "title":
+			matchOn = "rentable.title";
+		case "isbn":
+			matchOn = "rentable.isbn";
+		default:
+			// TODO handle invalid searchType strings
+			matchOn = "";
+		}
+		
+		String sql;
+		if (matchOn.equals("rentable.title")) {
+			sql = "SELECT * FROM rental, rentable WHERE rental.sku = rentable.sku AND ? LIKE ?;";
+		} else {
+			sql = "SELECT * FROM rental, rentable WHERE rental.sku = rentable.sku AND ? = ?;";
+		}
 
 		ResultSet resultSet;
 		try (
 			Connection conn = JDBCConfig.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql);
 		) {
-			statement.setString(1, searchType);
+			statement.setString(1, matchOn);
 			statement.setString(2, searchParameters);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -144,15 +166,31 @@ public class RentalInventoryJDBC implements IRentalInventory {
 						resultSet.getInt(1), 
 						resultSet.getDate(2), 
 						resultSet.getDate(3),
-						resultSet.getInt(4),
+						resultSet.getString(4),
 						resultSet.getInt(5));
 				resList.add(rowObj);
 			}
 		} catch (SQLException e) {
+			// TODO handle sql exceptions
 			e.printStackTrace();
 		}
 		return resList;
-
+	}
+	
+	public static String buildRentalsTable(ArrayList<Rental> result) {
+		StringBuilder rentalTable = new StringBuilder();
+        String rentalTableHeader = "SKU   | Start Date | End Date   | Times Renewed | UserId\n";
+        String rentalRowTemplate = "%-5s | %-10s | %-10s | %-13s | %-6s\n";
+        rentalTable.append(rentalTableHeader);
+        for (Rental rental: result) {
+        	rentalTable.append(String.format(rentalRowTemplate, 
+        			rental.getSKU(), 
+        			rental.getStartDate(), 
+        			rental.getEndDate(), 
+        			rental.getTimesRenewed(), 
+        			rental.getUserId()));
+        }
+        return rentalTable.toString();
 	}
 
 	/**
