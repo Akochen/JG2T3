@@ -7,7 +7,7 @@ public class Rental {
 	private Date endDate;
 	private int timesRenewed;
 	private int SKU;
-	private int userId;
+	private String userId;
 	
 	/**
 	 * Creates a rental
@@ -15,7 +15,7 @@ public class Rental {
 	 * @param start When the Rental is created
 	 * @param end When the Rentable will need to be returned
 	 */
-	Rental(int SKU, Date start, Date end, int userId, int timesRenewed){
+	Rental(int SKU, Date start, Date end, String userId, int timesRenewed){
 		this.SKU = SKU;
 		this.startDate = start;
 		this.endDate = end;
@@ -47,7 +47,7 @@ public class Rental {
 	/**
 	 * @return the userId
 	 */
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 	

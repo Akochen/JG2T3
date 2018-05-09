@@ -72,8 +72,8 @@ public class StaffRentalManagementInterface {
         scanner.close();
         
         if(!type.equals("")) {
-            System.out.println("Results: ");
-            inventory.searchRentals(type, parameter);
+            System.out.println("Results:\n");
+            System.out.println(inventory.searchRentals(type, parameter));
         }
     }
 	
