@@ -45,7 +45,7 @@ public class UserMenu {
                     break;
             case 3: System.out.println("Viewing all rentables:");
                     RentableInventory inventory = new RentableInventory();
-                    inventory.viewRentables();
+            		System.out.println("All rentables:\n" + inventory.viewRentables());
                     break;
             default:
                     System.out.println("Invalid option, returning to menu..");

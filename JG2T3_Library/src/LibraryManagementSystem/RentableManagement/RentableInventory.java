@@ -18,7 +18,7 @@ public class RentableInventory implements IRentableInventory {
 	 * @return returns true if Rentable was successfully added
 	 */
 	@Override
-	public String addRentable(Rentable r) {
+	public boolean addRentable(Rentable r) {
 		return inventory.addRentable(r);
 	}
 
@@ -39,7 +39,7 @@ public class RentableInventory implements IRentableInventory {
 	 * @return True if the search is successful and the desired Rentables are printed out
 	 */
 	@Override
-	public String searchRentables(String searchType, String searchParameter) {
+	public ArrayList<String> searchRentables(String searchType, String searchParameter) {
 		return inventory.searchRentables(searchType, searchParameter);
 	}
 
@@ -48,7 +48,7 @@ public class RentableInventory implements IRentableInventory {
 	 * @return True if all Rentables are successfully printed out
 	 */
 	@Override
-	public String viewRentables() {
+	public ArrayList<String> viewRentables() {
 		return inventory.viewRentables();
 	}
 

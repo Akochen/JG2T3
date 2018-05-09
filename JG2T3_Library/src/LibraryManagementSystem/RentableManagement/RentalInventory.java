@@ -17,8 +17,8 @@ public class RentalInventory implements IRentalInventory {
 	 * @return returns true if the Rentable is successfully checked in
 	 */
 	@Override
-	public boolean checkIn(int sku) {
-		return inventory.checkIn(sku);
+	public ArrayList<String> checkIn(int rentableId) {
+		return inventory.checkIn(rentableId);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class RentalInventory implements IRentalInventory {
 	 * @return True if the search is successful and the desired Rentals are printed out
 	 */
 	@Override
-	public boolean searchRentals(String searchType, String searchParameters) {
+	public ArrayList<Rental> searchRentals(String searchType, String searchParameters) {
 		return inventory.searchRentals(searchType, searchParameters);
 	}
 	
@@ -59,8 +59,13 @@ public class RentalInventory implements IRentalInventory {
 	 * @return Returns an ArrayList of all existing Rentals
 	 */
 	@Override
-	public boolean viewRentals() {
+	public ArrayList<String> viewRentals() {
 		return inventory.viewRentals();
+	}
+
+	@Override
+	public boolean addFee() {
+		return inventory.addFee();
 	}
 
 }

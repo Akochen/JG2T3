@@ -1,6 +1,11 @@
 package LibraryManagementSystem.RentableManagement;
 
 import java.sql.*;
+import java.util.ArrayList;
+
+import LibraryManagementSystem.AccountManagement.AccountCollection;
+import LibraryManagementSystem.AccountManagement.User;
+
 
 public class RentalInventoryJDBC implements IRentalInventory {
 	private final String URL = "jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true";
@@ -22,9 +27,74 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 * @return returns true if the Rentable is successfully checked in
 	 */
 	@Override
-	public boolean checkIn(int sku) {
-		// TODO Auto-generated method stub
-		return false;
+	public ArrayList<String> checkIn(int rentableId) {
+		String sql1 = "";
+		String sql2 = "";
+		String test = "";
+		String sql3 = "";
+		ArrayList<String> reservedBy = new ArrayList<String>();
+		sql1 = "SELECT * FROM Rentable WHERE Rentable.rentableId = '" + rentableId + "';";
+		sql2 = "DELETE FROM Rental WHERE Rental.rentableId = '" + rentableId + "';";
+		sql3 = "SELECT * FROM Rental WHERE Rental.rentableId = '" + rentableId + "';";
+		Connection conn = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		ResultSet testresultSet = null;
+		ResultSet resultSet3 = null;
+
+		try { //include reservation for this to work!!!!!
+			conn = DriverManager.getConnection(URL, uName, uPass);
+			statement = conn.createStatement();
+			resultSet = statement.executeQuery(sql1);
+			
+			
+			if (!resultSet.first()){
+				reservedBy.add("No Reservtions Found");
+				return reservedBy; 
+			}
+			String upcToEnter = resultSet.getString("upc");
+			test = "SELECT userId FROM Reservation WHERE Reservation.upc = '" + upcToEnter + "';";
+			testresultSet = statement.executeQuery(test);
+			/*if ( ReservationCollectionJDBC.searchByUpc( upcToEnter ) ){
+				reservedBy.add( resultSet.getString("userId") );
+			}
+			*/
+			if (!testresultSet.first()){
+				reservedBy.add("No Reservtions Found");
+			} else {
+				do
+					reservedBy.add("Item is reserved by: " + testresultSet.getString("userId") + "\n" );
+				while ( testresultSet.next());
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		try {
+			resultSet3 = statement.executeQuery(sql3);
+			if (!resultSet3.first()){
+				reservedBy.add("No Rentals Found");
+				return reservedBy; 
+			}else 
+				reservedBy.add("Rentable was Checked In.");
+			
+			statement.executeUpdate(sql2);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return reservedBy;
+
 	}
 
 	/**
@@ -54,12 +124,13 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 * Used for filtering Rentals based on a specific input parameter
 	 * @param searchType The attribute being used to filter results
 	 * @param searchParameters The parameter being compared to the rentals in the database to determine what will be returned
-	 * @return True if the search is successful and the desired Rentals are printed out
+	 * @return an ArrayList of Rentals meeting the search criteria. 
 	 */
 	@Override
-	public boolean searchRentals(String searchType, String searchParameters) {
-		boolean result = false;
-		String sql = "SELECT * FROM rental, rentable WHERE rental.rentableID = rentable.rentableID AND rentable.type = ? AND rentable.title LIKE ?;";
+	public ArrayList<Rental> searchRentals(String searchType, String searchParameters) {
+		ArrayList<Rental> resList = new ArrayList<>();
+		String sql = "SELECT * FROM rental, rentable WHERE rental.sku = rentable.sku AND rentable.type = ? AND rentable.title LIKE ?;";
+
 		ResultSet resultSet;
 		try (
 			Connection conn = JDBCConfig.getConnection();
@@ -69,16 +140,18 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			statement.setString(2, searchParameters);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				String toPrint = "SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
-				+ ", End Date: " + resultSet.getString(3) + ", User Id: " + resultSet.getString(4)
-				+ ", Times Renewed: " + resultSet.getString(5);
-				System.out.println(toPrint);
+				Rental rowObj = new Rental(
+						resultSet.getInt(1), 
+						resultSet.getDate(2), 
+						resultSet.getDate(3),
+						resultSet.getInt(4),
+						resultSet.getInt(5));
+				resList.add(rowObj);
 			}
-			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return result;
+		return resList;
 
 	}
 
@@ -88,9 +161,9 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 * @return Returns an ArrayList of all existing Rentals
 	 */
 	@Override
-	public boolean viewRentals() {
+	public ArrayList<String> viewRentals() {
 		String sql = "";
-		boolean result = false;
+		ArrayList<String> result = new ArrayList<String>();
 		sql = "SELECT * FROM Rental;";
 		Connection conn = null;
 		Statement statement = null;
@@ -99,12 +172,18 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				System.out.println("SKU: " + resultSet.getString(1) + ", Start Date: " + resultSet.getString(2)
-						+ ", End Date: " + resultSet.getString(3) + ", User Id: " + resultSet.getString(4)
-						+ ", Times Renewed: " + resultSet.getString(5));
+			
+			if (!resultSet.first()){
+				result.add("No Rentals Found");
 			}
-			return true;
+			do
+				result.add("Rentable ID: " + resultSet.getString(1) 
+				+ ", Start Date: " + resultSet.getString(2)
+				+ ", End Date: " + resultSet.getString(3) 
+				+ ", User Id: " + resultSet.getString(4)
+				+ ", Times Renewed: " + resultSet.getString(5) + "\n");
+			while (resultSet.next());
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -121,5 +200,49 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		}
 		return result;
 
+	}
+
+	@Override
+	public boolean addFee() {
+		String sql = "SELECT userId FROM db_library.rental WHERE end_date < NOW();";
+		Connection conn = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		boolean result = true;
+		try {
+			conn = DriverManager.getConnection(URL, uName, uPass);
+			statement = conn.createStatement();
+			resultSet = statement.executeQuery(sql);
+			AccountCollection ac = new AccountCollection();
+			if(!resultSet.first()) {
+				result = false;
+			} else {
+				resultSet.beforeFirst();
+				while(resultSet.next()) {
+					User user = (User)ac.search(resultSet.getString(1));
+					user.increaseBalance(1.5);
+					ac.updateBalance(user);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				resultSet.close();
+			} catch (SQLException e) {
+				return false;
+			}
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				return false;
+			}
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				return false;
+			}
+		}
+		return result;
 	}
 }

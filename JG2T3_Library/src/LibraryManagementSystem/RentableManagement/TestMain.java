@@ -12,12 +12,13 @@ public class TestMain {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println("Please select an operation: \n"
+				+ "5) Check In\n"
+				+ "4) View all rentals\n"
 				+ "3) View all rentables\n"
 				+ "2) Search Rentables\n"
 				+ "1) Add a new rentable");
 		Scanner scanner = new Scanner(System.in);
 		int method = scanner.nextInt();
-		scanner.close();
 		switch (method) {
 			case 1:
 				addRentableUI();
@@ -32,7 +33,8 @@ public class TestMain {
 				viewRentalUI();
 				break;
 			case 5:
-				//TODO check-in code
+				checkInUI();
+				break;
 			case 6: 
 				//TODO check-out code
 				break;
@@ -113,29 +115,30 @@ public class TestMain {
 		RentableInventory inventory = new RentableInventory();
 		
 		System.out.println("Please select an attribute to search by:\n"
-				+ "1) SKU\n"
-				+ "2) Title\n"
-				+ "3) ISBN\n"
-				+ "4) Condition\n"
-				+ "5) Genre\n"
-				+ "6) Type\n"
-				+ "7) Room Number");
+				+ "1) Rentable ID\n"
+				+ "2) Upc\n"
+				+ "3) Title\n"
+				+ "4) ISBN\n"
+				+ "5) Condition\n"
+				+ "6) Genre\n"
+				+ "7) Type");
 		int choice = scanner.nextInt();
 		String type = "";
+		
 		if(choice == 1) {
-			type = "sku";
+			type = "rentableId";
 		} else if(choice == 2) {
-			type = "title";
+			type = "upc";
 		}else if(choice == 3) {
-			type = "isbn";
+			type = "title";
 		}else if(choice == 4) {
-			type = "condition";
+			type = "isbn";
 		}else if(choice ==5) {
-			type = "genre";
+			type = "condition";
 		}else if(choice ==6) {
-			type = "type";
+			type = "genre";
 		}else if(choice ==7) {
-			type = "room_number";
+			type = "type";
 		} else {
 			System.out.println("Invalid input. Please try again.");
 			searchRentableUI();
@@ -144,23 +147,23 @@ public class TestMain {
 		String parameter = "";
 		System.out.print("Please input what you would like to search for. \nSearch: ");
 		parameter = scanner.next();
-		scanner.close();
 		
 		if(!type.equals("")) {
-			System.out.println("Results:" + inventory.searchRentables(type, parameter));
+			System.out.println("Results:");
+			System.out.println(inventory.searchRentables(type, parameter));
 		}
 	}
 	
 	public static void viewRentableUI(){
 		
 		RentableInventory inventory = new RentableInventory();
-		System.out.println(inventory.viewRentables());
+		System.out.print(inventory.viewRentables());
 	}
 	
 	public static void viewRentalUI(){
 		
 		RentalInventory inventory = new RentalInventory();
-		inventory.viewRentals();
+		System.out.println(inventory.viewRentals());
 	}
 	
 	public static void searchRentalUI() {
@@ -194,5 +197,13 @@ public class TestMain {
         }
     }
 
+	public static void checkInUI() {
+		Scanner scanner = new Scanner(System.in);
+		RentalInventory inventory = new RentalInventory();
+		
+		System.out.println("Please input the ID for the item you wish to check in:");
+		int id = scanner.nextInt();
+		System.out.println(inventory.checkIn(id));
 
+	}
 }
