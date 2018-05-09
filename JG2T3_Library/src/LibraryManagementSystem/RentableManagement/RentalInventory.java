@@ -63,4 +63,9 @@ public class RentalInventory implements IRentalInventory {
 		return inventory.viewRentals();
 	}
 
+	@Override
+	public boolean addFee() {
+		return inventory.addFee();
+	}
+
 }

@@ -33,7 +33,7 @@ public class RentableInventoryJDBC implements IRentableInventory {
 	 * @return returns true if Rentable was successfully added
 	 */
 	@Override
-	public String addRentable(Rentable r) {
+	public boolean addRentable(Rentable r) {
 		String query = r.getType();
 		String endMsg = "Rentable successfully added!";
 		
@@ -50,20 +50,20 @@ public class RentableInventoryJDBC implements IRentableInventory {
 			statement = conn.createStatement();
 			statement.execute(query);
 		} catch (SQLException e1) {
-			endMsg = "Error: ID already exists.";
+			return false;
 		} finally {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				endMsg = "Error: Unable to close statement.";
+				return false;
 			}
 			try {
 				conn.close();
 			} catch (SQLException e) {
-				endMsg = "Error: Unable to close connection.";
+				return false;
 			}
 		}
-		return endMsg;
+		return true;
 	}
 
 	/**

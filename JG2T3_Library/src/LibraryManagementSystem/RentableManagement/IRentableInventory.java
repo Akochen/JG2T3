@@ -10,7 +10,7 @@ public interface IRentableInventory {
 	 * @param r the Rentable to be added to the inventory
 	 * @return returns true if Rentable was successfully added
 	 */
-	public String addRentable(Rentable r);
+	public boolean addRentable(Rentable r);
 	
 	/**
 	 * Deletes a Rentable with a specific SKU from the database

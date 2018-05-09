@@ -3,6 +3,9 @@ package LibraryManagementSystem.RentableManagement;
 import java.sql.*;
 import java.util.ArrayList;
 
+import LibraryManagementSystem.AccountManagement.AccountCollection;
+import LibraryManagementSystem.AccountManagement.User;
+
 
 public class RentalInventoryJDBC implements IRentalInventory {
 	private final String URL = "jdbc:mysql://127.0.0.1:3306/db_library?useSSL=false&autoReconnect=true";
@@ -197,5 +200,49 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		}
 		return result;
 
+	}
+
+	@Override
+	public boolean addFee() {
+		String sql = "SELECT userId FROM db_library.rental WHERE end_date < NOW();";
+		Connection conn = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		boolean result = true;
+		try {
+			conn = DriverManager.getConnection(URL, uName, uPass);
+			statement = conn.createStatement();
+			resultSet = statement.executeQuery(sql);
+			AccountCollection ac = new AccountCollection();
+			if(!resultSet.first()) {
+				result = false;
+			} else {
+				resultSet.beforeFirst();
+				while(resultSet.next()) {
+					User user = (User)ac.search(resultSet.getString(1));
+					user.increaseBalance(1.5);
+					ac.updateBalance(user);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				resultSet.close();
+			} catch (SQLException e) {
+				return false;
+			}
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				return false;
+			}
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				return false;
+			}
+		}
+		return result;
 	}
 }

@@ -18,7 +18,7 @@ public class RentableInventory implements IRentableInventory {
 	 * @return returns true if Rentable was successfully added
 	 */
 	@Override
-	public String addRentable(Rentable r) {
+	public boolean addRentable(Rentable r) {
 		return inventory.addRentable(r);
 	}
 

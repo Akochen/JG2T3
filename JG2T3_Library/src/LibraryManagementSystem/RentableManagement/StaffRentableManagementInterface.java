@@ -83,7 +83,11 @@ public class StaffRentableManagementInterface {
 			}
 
 			// Creates Rentable and calls the method to add it to the db
-			System.out.println(inventory.addRentable(new Rentable(sku, upc, title, isbn, condition, genre, "Book", "1")));
+			if(inventory.addRentable(new Rentable(sku, upc, title, isbn, condition, genre, "Book", "1"))) {
+				System.out.println("Rentable Successfully added!");
+			} else {
+				System.out.println("Error: Unable to add rentable!");
+			}
 			break;
 		case 2:
 			// Asks for input information about Rentable
@@ -104,7 +108,11 @@ public class StaffRentableManagementInterface {
 			}
 
 			// Creates Rentable and calls the method to add it to the db
-			System.out.println(inventory.addRentable(new Rentable(sku, upc, title, condition, genre, "1")));
+			if(inventory.addRentable(new Rentable(sku, upc, title, condition, genre, "1"))) {
+				System.out.println("Rentable Successfully added!");
+			} else {
+				System.out.println("Error: Unable to add rentable!");
+			}
 			break;
 		case 3:
 			// Asks for input information about Rentable
@@ -128,7 +136,11 @@ public class StaffRentableManagementInterface {
 			}
 
 			// Creates Rentable and calls the method to add it to the db
-			System.out.println(inventory.addRentable(new Rentable(sku, upc, title, isbn, condition, genre, "EBook", "1")));
+			if(inventory.addRentable(new Rentable(sku, upc, title, isbn, condition, genre, "EBook", "1"))) {
+				System.out.println("Rentable Successfully added!");
+			} else {
+				System.out.println("Error: Unable to add rentable!");
+			}
 			break;
 		default:
 			// scanner.close();

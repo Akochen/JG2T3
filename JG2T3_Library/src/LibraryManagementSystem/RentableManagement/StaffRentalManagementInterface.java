@@ -21,7 +21,8 @@ public class StaffRentalManagementInterface {
                 + "1) View all rentals\n"
                 + "2) Search rentals\n"
                 + "3) Check In\n"
-                + "4) Exit Rental Management");
+                + "4) Add fees to overdue rentals\n"
+                + "5) Exit Rental Management");
         method = Integer.parseInt(scanner.nextLine());
         
         //scanner.close();
@@ -37,7 +38,10 @@ public class StaffRentalManagementInterface {
 			case 3:
 				checkInUI();
 				break;               
-            case 4: break;
+            case 4:
+            	addFeeUI();
+            	break;
+            case 5: break;
         }
 	}
 	
@@ -87,5 +91,14 @@ public class StaffRentalManagementInterface {
 		int id = scanner.nextInt();
 		System.out.println(inventory.checkIn(id));
 
+	}
+	
+	private void addFeeUI() {
+		RentalInventory inventory = new RentalInventory();
+		if(inventory.addFee()) {
+			System.out.println("Overdue rentals charged.");
+		} else {
+			System.out.println("Unable to charge rentals. Are there any overdue?");
+		}
 	}
 }

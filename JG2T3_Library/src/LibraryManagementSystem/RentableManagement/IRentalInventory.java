@@ -40,4 +40,5 @@ public interface IRentalInventory {
 	 */
 	public ArrayList<String> viewRentals();
 	
+	public boolean addFee();
 }
