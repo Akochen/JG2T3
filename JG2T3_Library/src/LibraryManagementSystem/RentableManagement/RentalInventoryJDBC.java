@@ -1,6 +1,7 @@
 package LibraryManagementSystem.RentableManagement;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import LibraryManagementSystem.AccountManagement.AccountCollection;
@@ -116,7 +117,10 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 */
 	@Override
 	public boolean renewRental(String rentableIdToSearch) {
+		boolean toReturn = false;
 		String sqlSelect = "SELECT * FROM Rentable WHERE Rentable.rentableId = '" + rentableIdToSearch + "';";
+		String sqlUpdate = "UPDATE Rental SET end_date = DATE_ADD(end_date, INTERVAL 3 DAY) WHERE Rental.rentableId = 'rentableIdToSeaerch';";
+
 		Connection conn = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -125,14 +129,29 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sqlSelect);
-			
-			if (!resultSet.first())
-				return false;
-			
-			
-			
 
-		return false;
+			if (!resultSet.first())
+				return toReturn;
+			
+			//statement.executeUpdate(sqlUpdate);
+			toReturn = true;
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+			return toReturn;
+			
 	}
 
 	/**

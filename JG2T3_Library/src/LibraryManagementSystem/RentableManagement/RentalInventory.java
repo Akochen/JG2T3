@@ -39,7 +39,7 @@ public class RentalInventory implements IRentalInventory {
 	 */
 	@Override
 	public boolean renewRental(String rentableIdToSearch) {
-		return true;
+		return renewRental(rentableIdToSearch);
 	}
 
 	/**
