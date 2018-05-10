@@ -12,6 +12,7 @@ public class TestMain {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println("Please select an operation: \n"
+				+ "6) Renew a Rental\n"
 				+ "5) Check In\n"
 				+ "4) View all rentals\n"
 				+ "3) View all rentables\n"
@@ -36,7 +37,7 @@ public class TestMain {
 				checkInUI();
 				break;
 			case 6: 
-				//TODO check-out code
+				renewRentalUI();
 				break;
 			default:
 				break;
@@ -205,5 +206,20 @@ public class TestMain {
 		int id = scanner.nextInt();
 		System.out.println(inventory.checkIn(id));
 
+	}
+	
+	public static void renewRentalUI(){
+        Scanner scanner = new Scanner(System.in);
+        RentalInventory inventory = new RentalInventory();
+        
+        System.out.println("Please enter the Rentable ID of the Rental you wish to extend: ");
+        String rentableIdToSearch = scanner.nextLine();
+        if(inventory.renewRental(rentableIdToSearch))
+        	System.out.println("The Rental was extended by 3 days.");
+        else
+        	System.out.println("The Rental was not extended");
+
+        
+        
 	}
 }
