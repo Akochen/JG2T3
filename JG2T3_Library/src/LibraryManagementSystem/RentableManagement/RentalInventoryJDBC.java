@@ -2,6 +2,7 @@ package LibraryManagementSystem.RentableManagement;
 
 import java.sql.*;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -187,21 +188,24 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		String matchOn;
 		switch (searchType) {
 		case "rentableid":
-			matchOn = "rentable.";
+			matchOn = "rental.rentableId";
+			break;
 		case "title":
 			matchOn = "rentable.title";
+			break;
 		case "isbn":
 			matchOn = "rentable.isbn";
+			break;
 		default:
 			// TODO handle invalid searchType strings
-			matchOn = "";
+			matchOn = "rentable.title";
 		}
 		
 		String sql;
 		if (matchOn.equals("rentable.title")) {
-			sql = "SELECT * FROM rental, rentable WHERE rental.rentableid = rentable.rentableid AND ? LIKE ?;";
+			sql = "SELECT * FROM rental, rentable WHERE rental.rentableId = rentable.rentableId AND rentable.title LIKE ?;";
 		} else {
-			sql = "SELECT * FROM rental, rentable WHERE rental.rentableid = rentable.rentableid AND ? = ?;";
+			sql = "SELECT * FROM rental, rentable WHERE rental.rentableId = rentable.rentableId AND " + matchOn + " = ?;";
 		}
 
 		ResultSet resultSet;
@@ -209,14 +213,13 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			Connection conn = JDBCConfig.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql);
 		) {
-			statement.setString(1, matchOn);
-			statement.setString(2, searchParameters);
+			statement.setString(1, searchParameters);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				Rental rowObj = new Rental(
-						resultSet.getInt(1), 
-						resultSet.getObject(2, Instant.class), 
-						resultSet.getObject(3, Instant.class),
+						resultSet.getString(1), 
+						resultSet.getObject(2, LocalDate.class),
+						resultSet.getObject(3, LocalDate.class),
 						resultSet.getString(4),
 						resultSet.getInt(5));
 				resList.add(rowObj);
@@ -230,14 +233,14 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	
 	public static String buildRentalsTable(ArrayList<Rental> result) {
 		StringBuilder rentalTable = new StringBuilder();
-        String rentalTableHeader = "SKU   | Start Date | End Date   | Times Renewed | UserId\n";
-        String rentalRowTemplate = "%-5s | %-10s | %-10s | %-13s | %-6s\n";
+        String rentalTableHeader = "RentableId | Start Date | End Date   | Times Renewed | UserId\n";
+        String rentalRowTemplate = "%-10s | %-10s | %-10s | %-13s | %-6s\n";
         rentalTable.append(rentalTableHeader);
         for (Rental rental: result) {
         	rentalTable.append(String.format(rentalRowTemplate, 
-        			rental.getSKU(), 
-        			rental.getStartDate().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_LOCAL_DATE), 
-        			rental.getEndDate().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_LOCAL_DATE), 
+        			rental.getRentableId(), 
+        			rental.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE), 
+        			rental.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE), 
         			rental.getTimesRenewed(),
         			rental.getUserId()));
         }

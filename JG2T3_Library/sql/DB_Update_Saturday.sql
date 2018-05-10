@@ -197,7 +197,9 @@ INSERT INTO rental Values(3333339, NOW() + INTERVAL 2 DAY, NOW() + INTERVAL 1 WE
 INSERT INTO rental Values(1111118, NOW(), NOW() + INTERVAL 5 DAY, 'U000001', 1);
 INSERT INTO rental Values(2222229, NOW() - INTERVAL 1 WEEK, NOW() + INTERVAL 3 DAY, 'U000001', 1);
 
-
+-- Sample rental for unit test
+-- test data should have fixed date instead of NOW(), which would break test code if test DB is re-initiated
+INSERT INTO rental VALUES('5555557', '2018-5-10 12:00:00', '2018-5-14 12:00:00', 'U000001', 0);
 
 
 
