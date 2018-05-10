@@ -20,9 +20,10 @@ public class StaffRentalManagementInterface {
         System.out.println("Please select an operation: \n"
                 + "1) View all rentals\n"
                 + "2) Search rentals\n"
-                + "3) Check In\n"
-                + "4) Add fees to overdue rentals\n"
-                + "5) Exit Rental Management");
+                + "3) Check out\n"
+                + "4) Check In\n"
+                + "5) Add fees to overdue rentals\n"
+                + "6) Exit Rental Management");
         method = Integer.parseInt(scanner.nextLine());
         
         //scanner.close();
@@ -36,12 +37,15 @@ public class StaffRentalManagementInterface {
                 openStaffInterface();
                 break;
 			case 3:
-				checkInUI();
+				checkOutUI();
 				break;               
             case 4:
+            	checkInUI();
+            	break;
+            case 5: 
             	addFeeUI();
             	break;
-            case 5: break;
+            case 6: break;
         }
 	}
 	
@@ -100,6 +104,18 @@ public class StaffRentalManagementInterface {
 		} else {
 			System.out.println("Unable to charge rentals. Are there any overdue?");
 		}
+	}
+	
+	private void checkOutUI() {
+		RentalInventory inventory = new RentalInventory();
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Please input the Rentable ID: ");
+		String rentable = scanner.nextLine();
+		System.out.print("Please input the user's ID: ");
+		String user  = scanner.nextLine();
+		
+		System.out.println(inventory.checkOut(rentable, user));
+		
 	}
 	
 }

@@ -219,7 +219,7 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		case "userid":
 			matchOn = "rental.userId";
 			break;
-		case "time_renewed":
+		case "times_renewed":
 			matchOn = "rental.times_renewed";
 			break;
 		default:
