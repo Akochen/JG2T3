@@ -58,9 +58,9 @@ public class StaffRentalManagementInterface {
         if(choice == 1) {
             type = "rentableid";
         } else if(choice == 2) {
-            type = "title";
+            type = "userid";
         }else if(choice == 3) {
-            type = "isbn";
+            type = "times_renewed";
         } else {
             System.out.println("Invalid input. Please try again.");
             searchRentalUI();
@@ -101,4 +101,5 @@ public class StaffRentalManagementInterface {
 			System.out.println("Unable to charge rentals. Are there any overdue?");
 		}
 	}
+	
 }
