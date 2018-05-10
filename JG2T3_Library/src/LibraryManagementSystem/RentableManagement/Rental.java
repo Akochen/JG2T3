@@ -1,10 +1,10 @@
 package LibraryManagementSystem.RentableManagement;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class Rental {
-	private Date startDate;
-	private Date endDate;
+	private Instant startDate;
+	private Instant endDate;
 	private int timesRenewed;
 	private int SKU;
 	private String userId;
@@ -15,7 +15,7 @@ public class Rental {
 	 * @param start When the Rental is created
 	 * @param end When the Rentable will need to be returned
 	 */
-	Rental(int SKU, Date start, Date end, String userId, int timesRenewed){
+	Rental(int SKU, Instant start, Instant end, String userId, int timesRenewed){
 		this.SKU = SKU;
 		this.startDate = start;
 		this.endDate = end;
@@ -26,14 +26,14 @@ public class Rental {
 	/**
 	 * @return the startDate
 	 */
-	public Date getStartDate() {
+	public Instant getStartDate() {
 		return startDate;
 	}
 
 	/**
 	 * @return the endDate
 	 */
-	public Date getEndDate() {
+	public Instant getEndDate() {
 		return endDate;
 	}
 

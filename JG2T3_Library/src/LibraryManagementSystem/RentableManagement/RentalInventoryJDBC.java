@@ -1,7 +1,10 @@
 package LibraryManagementSystem.RentableManagement;
 
 import java.sql.*;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.Period;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import LibraryManagementSystem.AccountManagement.AccountCollection;
@@ -106,7 +109,21 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 */
 	@Override
 	public boolean checkOut(int sku, String userId) {
-		// TODO Auto-generated method stub
+		// Create Rental (sku, today, 2 weeks later, userId, 0)
+		String sql = "INSERT INTO rental (sku, start_date, end_date, user_id, times_renewed) VALUES (?,?,?,?,?)";
+		try (
+				Connection conn = JDBCConfig.getConnection();
+				PreparedStatement st = conn.prepareStatement(sql);
+				) {
+			st.setInt(1, sku);
+			st.setObject(2, Instant.now());
+			st.setObject(3, Instant.now().plus(Period.ofWeeks(2)));
+			st.setString(4, userId);
+			st.setInt(5, 0);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -198,8 +215,8 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			while (resultSet.next()) {
 				Rental rowObj = new Rental(
 						resultSet.getInt(1), 
-						resultSet.getDate(2), 
-						resultSet.getDate(3),
+						resultSet.getObject(2, Instant.class), 
+						resultSet.getObject(3, Instant.class),
 						resultSet.getString(4),
 						resultSet.getInt(5));
 				resList.add(rowObj);
@@ -219,9 +236,9 @@ public class RentalInventoryJDBC implements IRentalInventory {
         for (Rental rental: result) {
         	rentalTable.append(String.format(rentalRowTemplate, 
         			rental.getSKU(), 
-        			rental.getStartDate(), 
-        			rental.getEndDate(), 
-        			rental.getTimesRenewed(), 
+        			rental.getStartDate().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_LOCAL_DATE), 
+        			rental.getEndDate().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_LOCAL_DATE), 
+        			rental.getTimesRenewed(),
         			rental.getUserId()));
         }
         return rentalTable.toString();
