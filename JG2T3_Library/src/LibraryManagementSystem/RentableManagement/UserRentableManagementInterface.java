@@ -14,14 +14,16 @@ public class UserRentableManagementInterface {
 	}
 	
 	private void openInterface() throws SQLException, ClassNotFoundException {
-		System.out.println("\nWould you like to search rentables?\n"
-                + "1) Yes\n"
-                + "2) No");
+		System.out.println("\nWhat would you like to do?\n"
+                + "1) Search Rentables\n"
+                + "2) View Rentables");
         Scanner scanner = new Scanner(System.in);
         int choice = Integer.parseInt(scanner.nextLine());
         
         if(choice == 1) {
             searchRentableUI();
+        } else if(choice == 2){
+        	viewRentableUI();
         } else {
             return;
         }
@@ -70,10 +72,22 @@ public class UserRentableManagementInterface {
         	 System.out.println("Please input the UPC of the Rentable you would like to reserve.\n");
         	 String newUpc = scanner.nextLine();
         	 new ReservationCollectionJDBC();
-        	 ReservationCollectionJDBC.createReservation(newUpc, userID, "ITEM");
+        	 Reservation itemReservation = ReservationCollectionJDBC.createReservation(newUpc, userID, "ITEM");
+        	 
+        	 if (itemReservation == null)
+             {
+                 System.out.println("Unable to create room reservation.");
+             } else
+             {
+                 System.out.println("Created a new item reservation...\n" + itemReservation);
+             }
         } else {
             return;
         }
     }
-
+	
+	public static void viewRentableUI() throws SQLException {
+		RentableInventory inventory = new RentableInventory();
+		System.out.println("All rentables:\n" + inventory.viewRentables());
+	}
 }
