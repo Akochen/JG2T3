@@ -118,8 +118,8 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	@Override
 	public boolean renewRental(String rentableIdToSearch) {
 		boolean toReturn = false;
-		String sqlSelect = "SELECT * FROM Rentable WHERE Rentable.rentableId = '" + rentableIdToSearch + "';";
-		String sqlUpdate = "UPDATE Rental SET end_date = DATE_ADD(end_date, INTERVAL 3 DAY) WHERE Rental.rentableId = 'rentableIdToSeaerch';";
+		String sqlSelect = "SELECT * FROM rental WHERE rental.rentableId = '" + rentableIdToSearch + "' AND rental.end_date < (NOW() + INTERVAL 3 DAY) AND end_date > NOW();";
+		String sqlUpdate = "UPDATE Rental SET end_date = DATE_ADD(end_date, INTERVAL 3 DAY) WHERE Rental.rentableId = '" + rentableIdToSearch + "';";
 
 		Connection conn = null;
 		Statement statement = null;
@@ -133,7 +133,7 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			if (!resultSet.first())
 				return toReturn;
 			
-			//statement.executeUpdate(sqlUpdate);
+			statement.executeUpdate(sqlUpdate);
 			toReturn = true;
 			
 		}catch (SQLException e) {
@@ -182,9 +182,9 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		
 		String sql;
 		if (matchOn.equals("rentable.title")) {
-			sql = "SELECT * FROM rental, rentable WHERE rental.sku = rentable.sku AND ? LIKE ?;";
+			sql = "SELECT * FROM rental, rentable WHERE rental.rentableid = rentable.rentableid AND ? LIKE ?;";
 		} else {
-			sql = "SELECT * FROM rental, rentable WHERE rental.sku = rentable.sku AND ? = ?;";
+			sql = "SELECT * FROM rental, rentable WHERE rental.rentableid = rentable.rentableid AND ? = ?;";
 		}
 
 		ResultSet resultSet;

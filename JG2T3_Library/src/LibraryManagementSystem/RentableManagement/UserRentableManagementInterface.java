@@ -16,7 +16,8 @@ public class UserRentableManagementInterface {
 	private void openInterface() throws SQLException, ClassNotFoundException {
 		System.out.println("\nWhat would you like to do?\n"
                 + "1) Search Rentables\n"
-                + "2) View Rentables");
+                + "2) View Rentables\n"
+                + "3) Renew Rental");
         Scanner scanner = new Scanner(System.in);
         int choice = Integer.parseInt(scanner.nextLine());
         
@@ -24,6 +25,10 @@ public class UserRentableManagementInterface {
             searchRentableUI();
         } else if(choice == 2){
         	viewRentableUI();
+        } else if(choice == 3){
+        	/*RentalInventory inventory = new RentalInventory();
+        	System.out.println(inventory.searchRentals("userid", userID));*/
+        	renewRentalUI();
         } else {
             return;
         }
@@ -89,5 +94,17 @@ public class UserRentableManagementInterface {
 	public static void viewRentableUI() throws SQLException {
 		RentableInventory inventory = new RentableInventory();
 		System.out.println("All rentables:\n" + inventory.viewRentables());
+	}
+	
+	public static void renewRentalUI(){
+        Scanner scanner = new Scanner(System.in);
+        RentalInventory inventory = new RentalInventory();
+        
+        System.out.println("Please enter the Rentable ID of the Rental you wish to extend: ");
+        String rentableIdToSearch = scanner.nextLine();
+        if(inventory.renewRental(rentableIdToSearch))
+        	System.out.println("The Rental was extended by 3 days.");
+        else
+        	System.out.println("The Rental was not extended");
 	}
 }

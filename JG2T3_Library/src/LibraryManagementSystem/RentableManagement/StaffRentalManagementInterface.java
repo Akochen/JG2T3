@@ -69,7 +69,7 @@ public class StaffRentalManagementInterface {
         String parameter = "";
         System.out.print("Please input what you would like to search for. \nSearch: ");
         parameter = scanner.nextLine();
-        scanner.close();
+        //scanner.close();
         
         if(!type.equals("")) {
             System.out.println("Results:\n");

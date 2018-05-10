@@ -218,8 +218,5 @@ public class TestMain {
         	System.out.println("The Rental was extended by 3 days.");
         else
         	System.out.println("The Rental was not extended");
-
-        
-        
 	}
 }
