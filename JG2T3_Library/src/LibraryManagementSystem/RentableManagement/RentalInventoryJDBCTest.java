@@ -4,12 +4,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
 class RentalInventoryJDBCTest {
 	
-	// TODO testCheckOut()
+	@Test
+	void testCheckOutObj() {
+		RentalInventoryJDBC ri = new RentalInventoryJDBC();
+		Optional<Rental> r = ri.checkOutObj("", "");
+		assertFalse(r.isPresent());
+		// TODO more testing
+	}
 
 	@Test
 	void testSearchRentalObj() {

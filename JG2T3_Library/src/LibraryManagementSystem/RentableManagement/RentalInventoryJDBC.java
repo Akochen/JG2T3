@@ -129,12 +129,9 @@ public class RentalInventoryJDBC implements IRentalInventory {
 				Connection conn = JDBCConfig.getConnection();
 				PreparedStatement st = conn.prepareStatement(sql);
 				PreparedStatement clearIsAvailableSt = conn.prepareStatement("UPDATE rentable SET isAvailable = 0 WHERE rentableId = ?");
-				PreparedStatement checkAvailableSt = conn.prepareStatement("SELECT rentableId FROM rentable WHERE rentableId = ? AND rentableId NOT IN (SELECT rentableId FROM rental);");
 				) {
 			// Check if the Rentable has a Rental
-			checkAvailableSt.setString(1, rentableId);
-			ResultSet av = checkAvailableSt.executeQuery();
-			if (!av.next()) { // if the resultset is empty, the rentable is not available
+			if (isRentableAvailable(rentableId)) { // if the resultset is empty, the rentable is not available
 				return Optional.empty();
 			}
 			st.setString(1, toBe.getRentableId());
@@ -152,6 +149,22 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			return Optional.empty();
 		}
 		return Optional.of(toBe);
+	}
+	
+	public boolean isRentableAvailable(String rentableId) {
+		String sql = "SELECT rentableId FROM rentable WHERE rentableId = ? AND rentableId NOT IN (SELECT rentableId FROM rental);";
+		try (
+				Connection conn = JDBCConfig.getConnection();
+				PreparedStatement st = conn.prepareStatement(sql);
+				) {
+			st.setString(1, rentableId);
+			ResultSet s = st.executeQuery();
+			return !s.first();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	/**
