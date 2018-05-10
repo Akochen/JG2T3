@@ -220,7 +220,7 @@ public class UserMenu {
         System.out.println("You have successfully logged out!");        
     }
 
-    private static void rentableManagement() throws SQLException
+    private static void rentableManagement() throws SQLException, ClassNotFoundException
     {
         new UserRentableManagementInterface(userID);
     }

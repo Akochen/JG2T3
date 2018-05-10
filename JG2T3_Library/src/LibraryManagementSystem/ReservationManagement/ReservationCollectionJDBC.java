@@ -15,7 +15,7 @@ public class ReservationCollectionJDBC
     /**
      * JDBC Driver.
      */
-    private static final String DRIVER = "com.mysql.jdbc.Driver";
+    private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     /**
      * Database URL.
      */
@@ -27,7 +27,7 @@ public class ReservationCollectionJDBC
     /**
      * Database login password.
      */
-    private static final String DATABASE_PASSWORD = "g2t2";
+    private static final String DATABASE_PASSWORD = "root";
     /**
      * Query statement.
      */
@@ -41,7 +41,7 @@ public class ReservationCollectionJDBC
      */
     private static Connection connection = null;
 
-    ReservationCollectionJDBC() throws ClassNotFoundException, SQLException
+    public ReservationCollectionJDBC() throws ClassNotFoundException, SQLException
     {
         //load the driver class
         Class.forName(DRIVER);
@@ -92,7 +92,7 @@ public class ReservationCollectionJDBC
                     ps.setObject(7, newReservation.getActive());
                     ps.setObject(8, newReservation.getReservationType());
                     ps.execute();
-
+                    
                     ReservationCollection.setRentableAvailabilityByUpc(newReservation.getUpc(), false);
                     break;
 
@@ -467,6 +467,7 @@ public class ReservationCollectionJDBC
      */
     public static Boolean isAvailable(String upcToSearch) throws SQLException
     {
+    	Connection testConn = connection;
         PreparedStatement ps = connection.prepareStatement("SELECT * " +
                 "FROM db_library.rentable " +
                 "WHERE upc = ? " +

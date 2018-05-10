@@ -8,12 +8,12 @@ import LibraryManagementSystem.ReservationManagement.*;
 public class UserRentableManagementInterface {
 	private static String userID;
 	
-	public UserRentableManagementInterface(String userID) throws SQLException {
+	public UserRentableManagementInterface(String userID) throws SQLException, ClassNotFoundException {
 		this.userID = userID;
 		openInterface();
 	}
 	
-	private void openInterface() throws SQLException {
+	private void openInterface() throws SQLException, ClassNotFoundException {
 		System.out.println("\nWould you like to search rentables?\n"
                 + "1) Yes\n"
                 + "2) No");
@@ -27,7 +27,7 @@ public class UserRentableManagementInterface {
         }
 	}
 	
-	public static void searchRentableUI() throws SQLException
+	public static void searchRentableUI() throws SQLException, ClassNotFoundException
     {
         Scanner scanner = new Scanner(System.in);
         RentableInventory inventory = new RentableInventory();
@@ -69,7 +69,8 @@ public class UserRentableManagementInterface {
         if(choice2 == 1) {
         	 System.out.println("Please input the UPC of the Rentable you would like to reserve.\n");
         	 String newUpc = scanner.nextLine();
-        	 ReservationCollection.createReservation(newUpc, userID, "ITEM");
+        	 new ReservationCollectionJDBC();
+        	 ReservationCollectionJDBC.createReservation(newUpc, userID, "ITEM");
         } else {
             return;
         }
