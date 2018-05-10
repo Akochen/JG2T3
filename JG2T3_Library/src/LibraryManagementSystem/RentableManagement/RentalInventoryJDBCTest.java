@@ -23,6 +23,9 @@ class RentalInventoryJDBCTest {
 		RentalInventoryJDBC ri = new RentalInventoryJDBC();
 		ArrayList<Rental> actual = ri.searchRentalsObj("rentableid", "5555557");
 		assertIterableEquals(expected, actual);
+		
+		actual = ri.searchRentalsObj("time_renewed", "1");
+		assertEquals(actual.size(), 3);
 	}
 	
 	@Test

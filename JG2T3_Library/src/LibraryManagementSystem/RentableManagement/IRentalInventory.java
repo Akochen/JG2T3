@@ -17,7 +17,7 @@ public interface IRentalInventory {
 	 * @param userId The userId of the user checking out the Rentable
 	 * @return returns true if the Rentable is successfully checked out
 	 */
-	public boolean checkOut(int sku, String userId);
+	public String checkOut(String rentabldId, String userId);
 	
 	/**
 	 * Extends the end date of a Rental

@@ -7,6 +7,7 @@ import java.time.Period;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import LibraryManagementSystem.AccountManagement.AccountCollection;
 import LibraryManagementSystem.AccountManagement.User;
@@ -108,23 +109,49 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	 * @return returns true if the Rentable is successfully checked out
 	 */
 	@Override
-	public boolean checkOut(int sku, String userId) {
+	public String checkOut(String rentableId, String userId) {
+		Optional<Rental> added = checkOutObj(rentableId, userId);
+		if (added.isPresent()) {
+			ArrayList<Rental> r = new ArrayList<>();
+			r.add(added.get());
+			return buildRentalsTable(r);
+		} else {
+			return "Sorry, the Rental failed to be created.";
+		}
+	}
+	
+	public Optional<Rental> checkOutObj(String rentableId, String userId) {
+		
 		// Create Rental (sku, today, 2 weeks later, userId, 0)
+		Rental toBe = new Rental(rentableId, LocalDate.now(), LocalDate.now().plus(Period.ofWeeks(2)), userId, 0);
 		String sql = "INSERT INTO rental (sku, start_date, end_date, user_id, times_renewed) VALUES (?,?,?,?,?)";
 		try (
 				Connection conn = JDBCConfig.getConnection();
 				PreparedStatement st = conn.prepareStatement(sql);
+				PreparedStatement clearIsAvailableSt = conn.prepareStatement("UPDATE rentable SET isAvailable = 0 WHERE rentableId = ?");
+				PreparedStatement checkAvailableSt = conn.prepareStatement("SELECT rentableId FROM rentable WHERE rentableId = ? AND rentableId NOT IN (SELECT rentableId FROM rental);");
 				) {
-			st.setInt(1, sku);
-			st.setObject(2, Instant.now());
-			st.setObject(3, Instant.now().plus(Period.ofWeeks(2)));
-			st.setString(4, userId);
-			st.setInt(5, 0);
+			// Check if the Rentable has a Rental
+			checkAvailableSt.setString(1, rentableId);
+			ResultSet av = checkAvailableSt.executeQuery();
+			if (!av.next()) { // if the resultset is empty, the rentable is not available
+				return Optional.empty();
+			}
+			st.setString(1, toBe.getRentableId());
+			st.setObject(2, toBe.getStartDate());
+			st.setObject(3, toBe.getEndDate());
+			st.setString(4, toBe.getUserId());
+			st.setInt(5, toBe.getTimesRenewed());
+			st.executeQuery();
+			// set isAvailable to 0
+			clearIsAvailableSt.setString(1, rentableId);
+			clearIsAvailableSt.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// e.printStackTrace();
+			return Optional.empty();
 		}
-		return false;
+		return Optional.of(toBe);
 	}
 
 	/**
@@ -189,15 +216,15 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		case "rentableid":
 			matchOn = "rental.rentableId";
 			break;
-		case "title":
-			matchOn = "rentable.title";
+		case "userid":
+			matchOn = "rental.userId";
 			break;
-		case "isbn":
-			matchOn = "rentable.isbn";
+		case "time_renewed":
+			matchOn = "rental.times_renewed";
 			break;
 		default:
 			// TODO handle invalid searchType strings
-			matchOn = "rentable.title";
+			matchOn = "rental.rentableId";
 		}
 		
 		String sql;

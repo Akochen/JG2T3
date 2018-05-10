@@ -1,2 +1,3 @@
-SELECT sku, type, title FROM `rentable`
-WHERE sku NOT IN ( SELECT sku FROM `rental` );
+SELECT rentableId, type, title FROM `rentable`
+WHERE rentableId = 1111110
+    AND rentableId NOT IN ( SELECT rentableId FROM `rental` );

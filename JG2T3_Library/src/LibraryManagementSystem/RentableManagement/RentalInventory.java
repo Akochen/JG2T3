@@ -28,8 +28,8 @@ public class RentalInventory implements IRentalInventory {
 	 * @return returns true if the Rentable is successfully checked out
 	 */
 	@Override
-	public boolean checkOut(int sku, String userId) {
-		return inventory.checkOut(sku, userId);
+	public String checkOut(String rentableId, String userId) {
+		return inventory.checkOut(rentableId, userId);
 	}
 
 	/**
