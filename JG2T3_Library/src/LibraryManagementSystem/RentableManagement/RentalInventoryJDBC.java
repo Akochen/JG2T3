@@ -37,17 +37,19 @@ public class RentalInventoryJDBC implements IRentalInventory {
 		String sql2 = "";
 		String test = "";
 		String sql3 = "";
+		String sqlUpdate = "";
 		ArrayList<String> reservedBy = new ArrayList<String>();
 		sql1 = "SELECT * FROM Rentable WHERE Rentable.rentableId = '" + rentableId + "';";
 		sql2 = "DELETE FROM Rental WHERE Rental.rentableId = '" + rentableId + "';";
 		sql3 = "SELECT * FROM Rental WHERE Rental.rentableId = '" + rentableId + "';";
+		sqlUpdate = "UPDATE Rentable SET isAvailable = 1 WHERE Rentable.rentableId = '" + rentableId + "';";
 		Connection conn = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		ResultSet testresultSet = null;
 		ResultSet resultSet3 = null;
 
-		try { //include reservation for this to work!!!!!
+		try { 
 			conn = DriverManager.getConnection(URL, uName, uPass);
 			statement = conn.createStatement();
 			resultSet = statement.executeQuery(sql1);
@@ -60,10 +62,6 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			String upcToEnter = resultSet.getString("upc");
 			test = "SELECT userId FROM Reservation WHERE Reservation.upc = '" + upcToEnter + "';";
 			testresultSet = statement.executeQuery(test);
-			/*if ( ReservationCollectionJDBC.searchByUpc( upcToEnter ) ){
-				reservedBy.add( resultSet.getString("userId") );
-			}
-			*/
 			if (!testresultSet.first()){
 				reservedBy.add("No Reservtions Found");
 			} else {
@@ -83,6 +81,7 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			}else 
 				reservedBy.add("Rentable was Checked In.");
 			
+			statement.executeUpdate(sqlUpdate);
 			statement.executeUpdate(sql2);
 		} catch (SQLException e1) {
 			e1.printStackTrace();
