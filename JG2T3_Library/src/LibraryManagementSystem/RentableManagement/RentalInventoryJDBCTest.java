@@ -2,7 +2,12 @@ package LibraryManagementSystem.RentableManagement;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -15,7 +20,29 @@ class RentalInventoryJDBCTest {
 		RentalInventoryJDBC ri = new RentalInventoryJDBC();
 		Optional<Rental> r = ri.checkOutObj("", "");
 		assertFalse(r.isPresent());
-		// TODO more testing
+		// Test cases TODO more cases
+		String rentableId = "4444449";
+		String userId = "U000001";
+		// Test logic
+		Rental expected = new Rental(rentableId, LocalDate.now(), LocalDate.now().plus(Period.ofWeeks(2)), userId, 0);
+		Optional<Rental> actualOpt = ri.checkOutObj(rentableId, userId);
+		assertTrue(actualOpt.isPresent());
+		Rental actual = actualOpt.get();
+		assertEquals(expected, actual);
+		
+		// Rewind database after test
+		try (
+				Connection conn = JDBCConfig.getConnection();
+				Statement s = conn.createStatement();
+				) {
+			conn.setAutoCommit(false);
+			s.execute("DELETE FROM rental WHERE rentableId = " + rentableId);
+			s.execute("UPDATE rentable SET isAvailable = 1 WHERE rentableId = " + rentableId);
+			conn.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Test
