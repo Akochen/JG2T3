@@ -122,19 +122,18 @@ public class RentalInventoryJDBC implements IRentalInventory {
 	
 	public Optional<Rental> checkOutObj(String rentableId, String userId) {
 		
-		// Create Rental (sku, today, 2 weeks later, userId, 0)
+		// Create Rental
 		Rental toBe = new Rental(rentableId, LocalDate.now(), LocalDate.now().plus(Period.ofWeeks(2)), userId, 0);
-		String sql = "INSERT INTO rental (sku, start_date, end_date, user_id, times_renewed) VALUES (?,?,?,?,?)";
+		String sql = "INSERT INTO rental (rentableId, start_date, end_date, userId, times_renewed) VALUES (?,?,?,?,?)";
 		try (
 				Connection conn = JDBCConfig.getConnection();
 				PreparedStatement st = conn.prepareStatement(sql);
 				PreparedStatement clearIsAvailableSt = conn.prepareStatement("UPDATE rentable SET isAvailable = 0 WHERE rentableId = ?");
-				PreparedStatement checkAvailableSt = conn.prepareStatement("SELECT rentableId FROM rentable WHERE rentableId = ? AND rentableId NOT IN (SELECT rentableId FROM rental);");
 				) {
+			conn.setAutoCommit(false);
 			// Check if the Rentable has a Rental
-			checkAvailableSt.setString(1, rentableId);
-			ResultSet av = checkAvailableSt.executeQuery();
-			if (!av.next()) { // if the resultset is empty, the rentable is not available
+			if (isRentableAvailable(rentableId)) { // if the resultset is empty, the rentable is not available
+				conn.rollback();
 				return Optional.empty();
 			}
 			st.setString(1, toBe.getRentableId());
@@ -142,16 +141,43 @@ public class RentalInventoryJDBC implements IRentalInventory {
 			st.setObject(3, toBe.getEndDate());
 			st.setString(4, toBe.getUserId());
 			st.setInt(5, toBe.getTimesRenewed());
-			st.executeQuery();
-			// set isAvailable to 0
-			clearIsAvailableSt.setString(1, rentableId);
-			clearIsAvailableSt.executeQuery();
+			
+			if (st.executeUpdate() != 1) { // update fails
+				conn.rollback();
+			} else { // update succeeds
+				clearIsAvailableSt.setString(1, rentableId);
+				if (clearIsAvailableSt.executeUpdate() != 1) {
+					conn.rollback();
+				} else {
+					// only commit when both are done
+					// 1. new Rental is inserted
+					// 2. isAvailable is set to 0
+					conn.commit();
+				}
+			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			// e.printStackTrace();
+			e.printStackTrace();
 			return Optional.empty();
 		}
 		return Optional.of(toBe);
+	}
+	
+	public boolean isRentableAvailable(String rentableId) {
+		String sql = "SELECT rentableId FROM rentable WHERE rentableId = ? AND rentableId NOT IN (SELECT rentableId FROM rental);";
+		try (
+				Connection conn = JDBCConfig.getConnection();
+				PreparedStatement st = conn.prepareStatement(sql);
+				) {
+			st.setString(1, rentableId);
+			ResultSet s = st.executeQuery();
+			return !s.first();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	/**
